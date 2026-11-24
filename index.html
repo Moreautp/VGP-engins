@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1f2328">
+<title>VGP Engins de chantier</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<style>
+:root{
+  --bg:#f4f4f1; --card:#ffffff; --ink:#1f2328; --muted:#5f6368; --line:#d9d9d4;
+  --accent:#f2b705; --accent-ink:#1f2328; --dark:#1f2328;
+  --ok:#1e7d32; --ok-bg:#e6f4e8; --nc:#c62828; --nc-bg:#fdeaea; --so:#5f6368; --so-bg:#ececec;
+  --warn:#b26a00; --warn-bg:#fff3d6;
+  --r:10px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+header.top{position:sticky;top:0;z-index:20;background:var(--dark);color:#fff;display:flex;align-items:center;gap:12px;padding:10px 16px;min-height:56px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:var(--dark);display:grid;place-items:center;font-weight:800;font-size:15px;flex:none}
+header.top h1{font-size:18px;margin:0;font-weight:700;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+header.top button{background:transparent;border:1px solid #555;color:#fff;border-radius:8px;padding:8px 12px;min-height:42px;cursor:pointer}
+main{max-width:1100px;margin:0 auto;padding:16px 16px 120px}
+.banner{background:var(--warn-bg);color:#5a3a00;border:1px solid #f0d58a;border-radius:var(--r);padding:10px 14px;margin-bottom:14px;font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.card h2{margin:0 0 10px;font-size:18px}
+.card h3{margin:0 0 8px;font-size:16px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.grow{flex:1}
+.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:10px 16px;min-height:46px;cursor:pointer;font-weight:600}
+.btn.primary{background:var(--accent);border-color:#d9a300;color:var(--accent-ink)}
+.btn.dark{background:var(--dark);border-color:var(--dark);color:#fff}
+.btn.danger{color:var(--nc);border-color:#efb5b5}
+.btn.small{min-height:38px;padding:6px 12px;font-size:14px}
+.btn:disabled{opacity:.5;cursor:default}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
+.stat b{display:block;font-size:26px;line-height:1.1}
+.stat span{font-size:13px;color:var(--muted)}
+.stat.retard b{color:var(--nc)} .stat.bientot b{color:var(--warn)} .stat.ok b{color:var(--ok)}
+.machines{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.mcard{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:14px;cursor:pointer;display:flex;flex-direction:column;gap:6px;text-align:left}
+.mcard:active{background:#fafaf5}
+.mcard .t{font-weight:700;font-size:16px}
+.mcard .s{color:var(--muted);font-size:14px}
+.badge{display:inline-block;border-radius:999px;padding:3px 10px;font-size:13px;font-weight:700;white-space:nowrap}
+.b-ok{background:var(--ok-bg);color:var(--ok)} .b-retard{background:var(--nc-bg);color:var(--nc)}
+.b-bientot{background:var(--warn-bg);color:var(--warn)} .b-jamais{background:var(--so-bg);color:#333}
+.b-lev{background:#fff1c2;color:#6b4e00} .b-draft{background:#e3ecff;color:#1d4ed8}
+.b-inapte{background:var(--nc);color:#fff}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--muted);flex:1;min-width:200px}
+label.f input,label.f select,label.f textarea{color:var(--ink);font-size:16px;border:1px solid #c8c8c2;border-radius:8px;padding:10px;min-height:46px;background:#fff;width:100%}
+label.f textarea{min-height:70px;resize:vertical}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.check{display:flex;gap:10px;align-items:center;font-size:16px;min-height:46px}
+.check input{width:24px;height:24px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.search{flex:1;min-width:220px;border:1px solid #c8c8c2;border-radius:8px;padding:10px;min-height:46px;background:#fff}
+.secnav{position:sticky;top:56px;z-index:15;background:var(--bg);padding:8px 0;display:flex;gap:8px;overflow-x:auto;margin-bottom:6px}
+.secnav a{flex:none;text-decoration:none;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:14px;white-space:nowrap}
+.secnav a.done{background:var(--ok-bg);border-color:#b7dfbd}
+.secnav a.hasnc{background:var(--nc-bg);border-color:#f1b9b9}
+.item{border-top:1px solid #ecece8;padding:10px 0}
+.item:first-of-type{border-top:0}
+.item .lbl{font-size:16px;margin-bottom:8px}
+.seg{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.seg button{min-width:64px;min-height:46px;border-radius:8px;border:1px solid #c8c8c2;background:#fff;font-weight:700;cursor:pointer}
+.seg button.on.C{background:var(--ok);border-color:var(--ok);color:#fff}
+.seg button.on.NC{background:var(--nc);border-color:var(--nc);color:#fff}
+.seg button.on.SO{background:var(--so);border-color:var(--so);color:#fff}
+.seg button .stl{font-weight:500;font-size:14px}
+.seg button{padding:0 12px}
+.seg .aux{min-width:auto;padding:0 12px;font-weight:600;color:var(--muted)}
+.obs{margin-top:8px;width:100%;border:1px solid #c8c8c2;border-radius:8px;padding:10px;min-height:46px}
+.item.isnc .obs{border-color:var(--nc)}
+.photos{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.photos .ph{position:relative}
+.photos img{width:96px;height:96px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
+.photos .ph button{position:absolute;top:-8px;right:-8px;width:28px;height:28px;border-radius:50%;border:0;background:var(--nc);color:#fff;font-weight:700;cursor:pointer}
+table.t{width:100%;border-collapse:collapse;font-size:14px}
+table.t th,table.t td{border:1px solid var(--line);padding:6px;text-align:left;vertical-align:top}
+table.t th{background:#f3f3ee;font-weight:600}
+table.t input,table.t select{width:100%;min-width:70px;border:1px solid #c8c8c2;border-radius:6px;padding:8px;min-height:42px;background:#fff}
+.scroll{overflow-x:auto}
+.calc{font-weight:700}
+.calc.ok{color:var(--ok)} .calc.nc{color:var(--nc)} .calc.warn{color:var(--warn)}
+.hint{font-size:13px;color:var(--muted);margin:4px 0 10px}
+.sigwrap{border:1px dashed #9a9a94;border-radius:8px;background:#fff;position:relative}
+.sigwrap canvas{display:block;width:100%;height:180px;touch-action:none}
+.sigwrap .ph{position:absolute;inset:0;display:grid;place-items:center;color:#aaa;pointer-events:none;font-size:14px}
+.radio-big{display:flex;gap:10px;flex-wrap:wrap}
+.radio-big label{flex:1;min-width:180px;border:2px solid var(--line);border-radius:10px;padding:12px;cursor:pointer;background:#fff;display:flex;gap:10px;align-items:flex-start}
+.radio-big input{width:22px;height:22px;margin-top:2px}
+.radio-big label.sel-apte{border-color:var(--ok);background:var(--ok-bg)}
+.radio-big label.sel-reserves{border-color:var(--warn);background:var(--warn-bg)}
+.radio-big label.sel-inapte{border-color:var(--nc);background:var(--nc-bg)}
+.bottombar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:10px 16px;display:flex;gap:10px;justify-content:flex-end;z-index:25}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:50;display:grid;place-items:center;padding:16px}
+.modal{background:#fff;border-radius:12px;max-width:480px;width:100%;padding:20px}
+.modal p{margin:0 0 16px}
+.toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:var(--dark);color:#fff;padding:10px 16px;border-radius:8px;z-index:60;font-size:14px}
+.empty{text-align:center;color:var(--muted);padding:30px 10px}
+.hist{width:100%;border-collapse:collapse}
+.hist td{padding:10px 6px;border-top:1px solid #ecece8}
+.ref{font-size:13px;color:var(--muted)}
+/* ---------- Rapport ---------- */
+.report{background:#fff;color:#000;max-width:800px;margin:0 auto;padding:24px;border:1px solid var(--line);font-size:13px}
+.report h1{font-size:20px;margin:0 0 4px}
+.report h2{font-size:15px;margin:18px 0 6px;padding:4px 8px;background:#eee;border-left:4px solid var(--accent)}
+.report table{width:100%;border-collapse:collapse;margin-bottom:6px}
+.report th,.report td{border:1px solid #999;padding:4px 6px;text-align:left;vertical-align:top}
+.report th{background:#f2f2f2}
+.report table.chk{table-layout:fixed}.report table.chk th:first-child{width:56%}.report table.chk th:nth-child(2){width:52px}
+.report .st{font-weight:700;text-align:center;width:44px}
+.report .st.C{color:var(--ok)} .report .st.NC{color:var(--nc)} .report .st.SO{color:#555}
+.report .phs{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.report .phs img{width:150px;height:112px;object-fit:cover;border:1px solid #999}
+.report .sig{height:90px;border:1px solid #999;display:flex;align-items:center;justify-content:center}
+.report .sig img{max-height:86px;max-width:100%}
+.report .concl{font-size:15px;font-weight:800;padding:8px;border:2px solid #000;text-align:center;margin:6px 0}
+.report .pb{page-break-before:always;break-before:page}
+.report .small{font-size:11px;color:#444}
+.report .box{display:inline-block;width:14px;height:14px;border:1px solid #000;vertical-align:-2px;margin-right:6px;text-align:center;line-height:12px;font-size:12px;font-weight:800}
+@media (max-width:760px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .grid2,.grid3{grid-template-columns:1fr}
+}
+@media print{
+  @page{size:A4;margin:12mm}
+  body{background:#fff}
+  header.top,.noprint,.bottombar,.banner,.toast{display:none!important}
+  main{padding:0;max-width:none}
+  .report{border:0;padding:0;max-width:none}
+  .report h2{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .report tr,.report .phs img{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="logo">VGP</div>
+  <h1 id="title">VGP Engins de chantier</h1>
+  <button id="btnHome" class="noprint" type="button">Parc</button>
+  <button id="btnSettings" class="noprint" type="button">Réglages</button>
+</header>
+<main id="app"></main>
+<div id="overlay"></div>
+
+<script>
+"use strict";
+/* =====================================================================
+   Référentiel : types d'engins et points de contrôle
+   ===================================================================== */
+const SECTIONS = {
+  docs:{title:"Documents",items:[
+    ["notice","Notice d'instructions du fabricant disponible"],
+    ["ce","Déclaration CE de conformité / plaque constructeur lisible"],
+    ["carnet","Carnet d'entretien (et carnet de maintenance si levage) à jour"],
+    ["vgpprec","Rapport de la VGP précédente et suite donnée aux réserves"],
+    ["autor","Autorisation de conduite du conducteur (CACES R482 ou équivalent)"]]},
+  structure:{title:"Châssis et structure",items:[
+    ["chassis","Châssis : déformation, fissures, soudures"],
+    ["fixations","Fixations principales (contrepoids, protections, réservoirs)"],
+    ["corrosion","Absence de corrosion importante ou de pièces endommagées"]]},
+  cabine:{title:"Poste de conduite et protections",items:[
+    ["rops","Structure de protection ROPS / FOPS : état, fixations, aucune modification"],
+    ["ceinture","Ceinture de sécurité : présence, état, verrouillage"],
+    ["siege","Siège et réglages"],
+    ["acces","Accès : marches, poignées, mains courantes, plancher antidérapant"],
+    ["vitres","Vitrages, essuie-glaces, lave-glace"],
+    ["commandes","Commandes : repérage, retour au neutre, pas de jeu anormal"],
+    ["verrou","Verrouillage des commandes (levier de sécurité / console relevable)"],
+    ["instruments","Tableau de bord : voyants, alarmes, indicateurs"],
+    ["portes","Portes et maintiens en position ouverte"],
+    ["extincteur","Extincteur (si équipé) : présence, date de contrôle"]]},
+  freins:{title:"Freinage et direction",items:[
+    ["fservice","Frein de service : efficacité (essai)"],
+    ["fparking","Frein de stationnement : efficacité, témoin"],
+    ["fsecours","Freinage de secours"],
+    ["direction","Direction : jeu, efficacité, direction de secours si équipée"]]},
+  pneus:{title:"Train de roulement – pneumatiques",items:[
+    ["pneusetat","Pneumatiques : usure, coupures, hernies"],
+    ["pneuspress","Pression de gonflage"],
+    ["jantes","Jantes et écrous de roue"],
+    ["ponts","Ponts, essieux, transmissions : jeux, fuites, protections"]]},
+  chenilles:{title:"Train de roulement – chenilles",items:[
+    ["tension","Tension des chenilles"],
+    ["patins","Patins, maillons, axes : usure, casse"],
+    ["galets","Galets, roues folles, barbotins"],
+    ["tendeur","Dispositif de tension : fuites, fonctionnement"],
+    ["translation","Moteurs et réducteurs de translation : fuites, fixations"]]},
+  hydrau:{title:"Circuit hydraulique",items:[
+    ["flexibles","Flexibles : usure, frottements, gonflements"],
+    ["raccords","Raccords et tuyauteries rigides : fuites"],
+    ["verins","Vérins : tiges, joints, fixations"],
+    ["niveau","Niveau d'huile hydraulique, réservoir"]]},
+  moteur:{title:"Moteur, énergie et protections",items:[
+    ["fuites","Fuites (huile, carburant, liquide de refroidissement)"],
+    ["echappement","Échappement : étanchéité, protection contre les brûlures"],
+    ["capots","Capots et protecteurs des parties tournantes et chaudes"],
+    ["batterie","Batterie : fixation, bornes, coupe-batterie"],
+    ["electrique","Faisceaux électriques : état, frottements"]]},
+  signal:{title:"Signalisation, éclairage et visibilité",items:[
+    ["klaxon","Avertisseur sonore"],
+    ["recul","Alarme de recul"],
+    ["gyro","Gyrophare / feu à éclats"],
+    ["feux","Feux de signalisation et éclairage de travail"],
+    ["retro","Rétroviseurs, caméras, détection (si équipé)"],
+    ["picto","Pictogrammes, plaques et consignes de sécurité lisibles"]]},
+  pelle:{title:"Équipement de pelle",items:[
+    ["fleche","Flèche : déformation, fissures, soudures"],
+    ["balancier","Balancier : déformation, fissures, soudures"],
+    ["axes","Axes, bagues, arrêtoirs d'axes : jeux, usure"],
+    ["attache","Attache rapide : état, verrouillage, sécurité anti-décrochage, témoin"],
+    ["godet","Godet / outil : état, dents, fixations"],
+    ["couronne","Couronne d'orientation : jeu, fixation, graissage"],
+    ["forient","Frein d'orientation de la tourelle"],
+    ["vtourelle","Verrouillage de la tourelle (transport)"]]},
+  pellepneus:{title:"Spécifique pelle sur pneus",items:[
+    ["stabs","Stabilisateurs / lame : état, vérins, clapets"],
+    ["essieu","Blocage de l'essieu oscillant"],
+    ["ftravail","Frein de travail / blocage de translation"]]},
+  mini:{title:"Spécifique mini-pelle",items:[
+    ["deport","Bras de déport : axes, vérin, jeux"],
+    ["lame","Lame : état, vérin, fixation"]]},
+  chargeuse:{title:"Équipement de chargeuse",items:[
+    ["bras","Bras de levage : déformation, fissures, soudures"],
+    ["cinematique","Biellettes, axes, bagues : jeux, usure"],
+    ["tablier","Tablier / attache rapide : état, verrouillage, témoin"],
+    ["godetc","Godet / outil : état, lame d'usure, dents"],
+    ["bequille","Béquille de maintien des bras (maintenance) : présence, état"],
+    ["varticul","Verrouillage de l'articulation (si châssis articulé)"],
+    ["autoretour","Retour au creusement / position flottante"]]},
+  tractopelle:{title:"Équipement de chargeuse-pelleteuse",items:[
+    ["chargeur","Chargeur avant : bras, biellettes, axes"],
+    ["godetav","Godet avant / attache : état, verrouillage"],
+    ["bequille","Béquille de maintien des bras de chargeur"],
+    ["flechear","Pelle arrière : flèche, balancier, soudures"],
+    ["axesar","Pelle arrière : axes, bagues, jeux"],
+    ["attachear","Attache rapide arrière : verrouillage, sécurité"],
+    ["stabilisateurs","Stabilisateurs : état, vérins, clapets"],
+    ["deportar","Coulisseau de déport latéral : verrouillage"],
+    ["verroupelle","Verrouillage de la pelle arrière en position transport"],
+    ["siegepivot","Siège pivotant : verrouillage, sécurités de commande"]]},
+  bull:{title:"Équipement de bouteur",items:[
+    ["lameb","Lame : déformation, fissures, couteaux, embouts"],
+    ["poussee","Bras de poussée, rotules, tirants : jeux, fissures"],
+    ["verinsb","Vérins de lame : fixations, fuites"],
+    ["ripper","Défonceuse (ripper) si équipée : dents, axes, vérins"],
+    ["protb","Protections inférieures (carters), grille de radiateur"],
+    ["treuil","Treuil (si équipé) : câble, frein"]]},
+  tombereau:{title:"Équipement de tombereau",items:[
+    ["benne","Benne : déformation, fissures, articulations"],
+    ["verinsbenne","Vérins de benne : fixations, fuites"],
+    ["securitebenne","Maintien de benne levée (béquille, verrouillage) : présence, état"],
+    ["alarmebenne","Témoin / alarme benne levée"],
+    ["ralentisseur","Ralentisseur (retarder / frein moteur)"],
+    ["suspension","Suspensions"],
+    ["vartic","Articulation et son verrouillage (tombereau articulé)"]]},
+  dumper:{title:"Équipement de dumper",items:[
+    ["bennedum","Benne : état, articulation, verrouillage en position route"],
+    ["rotation","Rotation de benne (si équipée) : verrouillage"],
+    ["vartdum","Articulation : verrouillage pour maintenance"]]},
+  niveleuse:{title:"Équipement de niveleuse",items:[
+    ["lamen","Lame : couteaux, embouts, glissières"],
+    ["cercle","Cercle et couronne : jeu, dents"],
+    ["scarif","Scarificateur / défonceuse : dents, vérins"],
+    ["lameav","Lame avant (si équipée)"],
+    ["inclinaison","Inclinaison des roues avant"],
+    ["vartn","Articulation et son verrouillage"]]},
+  compacteur:{title:"Équipement de compacteur",items:[
+    ["billes","Billes / roues : état, racloirs"],
+    ["vibration","Vibration : commande et arrêt"],
+    ["vartc","Articulation et son verrouillage"],
+    ["arrosage","Arrosage (si équipé)"]]},
+  fonction:{title:"Essais de fonctionnement (à vide)",items:[
+    ["demarrage","Sécurité de démarrage (au neutre / levier de sécurité relevé)"],
+    ["mouvements","Tous les mouvements de l'équipement : fonctionnement normal, sans à-coups"],
+    ["arretcmd","Arrêt des mouvements au relâchement des commandes"],
+    ["arretmoteur","Arrêt moteur / arrêt d'urgence"],
+    ["translationessai","Translation avant / arrière, changement de vitesse"]]},
+  levage:{title:"Levage – examen",items:[
+    ["tableau","Tableau de charges en cabine, lisible, correspondant à l'équipement monté"],
+    ["notelev","Notice : utilisation en levage prévue par le fabricant"],
+    ["accroche","Point d'accrochage : homologué, CMU marquée, linguet de sécurité"],
+    ["clapetspres","Clapets de sécurité présents sur les vérins de levage"],
+    ["avert","Avertisseur / limiteur de surcharge : présent, en état"],
+    ["modelev","Mode levage (si équipé) : sélection, fonctionnement"],
+    ["accessoires","Accessoires de levage utilisés : marqués, VGP à jour (12 mois)"]]},
+  fourches:{title:"Levage – fourches",items:[
+    ["fourchesetat","Fourches : fissures, déformation, usure du talon (10 % maxi de l'épaisseur)"],
+    ["fourchesverr","Verrouillage des fourches sur le tablier"],
+    ["fourchesmarq","Marquage de la capacité des fourches"]]}
+};
+
+const TYPES = {
+  pelle_chenilles:{label:"Pelle hydraulique sur chenilles",spec:["pelle"],train:"chenilles",lev:true,famille:"pelle"},
+  pelle_pneus:{label:"Pelle hydraulique sur pneus",spec:["pelle","pellepneus"],train:"pneus",lev:true,famille:"pelle"},
+  mini_pelle:{label:"Mini-pelle",spec:["pelle","mini"],train:"chenilles",lev:true,famille:"pelle"},
+  chargeuse_pneus:{label:"Chargeuse sur pneus",spec:["chargeuse"],train:"pneus",lev:true,famille:"chargeuse"},
+  chargeuse_chenilles:{label:"Chargeuse sur chenilles",spec:["chargeuse"],train:"chenilles",lev:true,famille:"chargeuse"},
+  mini_chargeuse:{label:"Mini-chargeuse",spec:["chargeuse"],train:"pneus",lev:true,famille:"chargeuse"},
+  tractopelle:{label:"Chargeuse-pelleteuse (tractopelle)",spec:["tractopelle"],train:"pneus",lev:true,famille:"pelle"},
+  bouteur:{label:"Bouteur (bull)",spec:["bull"],train:"chenilles",lev:false},
+  tombereau_rigide:{label:"Tombereau rigide",spec:["tombereau"],train:"pneus",lev:false},
+  tombereau_articule:{label:"Tombereau articulé",spec:["tombereau"],train:"pneus",lev:false},
+  dumper:{label:"Dumper / mini-dumper",spec:["dumper"],train:"pneus",lev:false},
+  niveleuse:{label:"Niveleuse",spec:["niveleuse"],train:"pneus",lev:false},
+  compacteur:{label:"Compacteur",spec:["compacteur"],train:"aucun",lev:false,note:"Les compacteurs tandem sont exclus de l'arrêté du 5 mars 1993 : vérifiez si votre modèle est concerné. Un contrôle annuel reste recommandé."},
+  autre:{label:"Autre engin de terrassement",spec:[],train:"pneus",lev:true,famille:"pelle"}
+};
+const DISCLAIMER="Cet outil est mis à disposition gratuitement, en l'état et sans garantie. C'est une aide à la réalisation des VGP : il ne remplace ni la notice du fabricant, ni les procédures du vérificateur, ni son jugement. Le contenu des rapports et leurs conclusions restent sous la seule responsabilité de la personne qualifiée qui réalise la vérification. Les données sont enregistrées uniquement sur l'appareil utilisé.";
+const TRAINS = {pneus:"Pneus",chenilles:"Chenilles",aucun:"Billes / sans train séparé"};
+const LEV_EQUIP = {crochet:"Crochet / anneau de levage",fourches:"Fourches à palettes",autre:"Autre (potence, palonnier…)"};
+
+function sectionsFor(m){
+  const t = TYPES[m.type] || TYPES.autre;
+  const list = ["docs","structure","cabine","freins"];
+  if(m.train==="pneus") list.push("pneus");
+  if(m.train==="chenilles") list.push("chenilles");
+  list.push("hydrau","moteur","signal");
+  t.spec.forEach(s=>list.push(s));
+  list.push("fonction");
+  if(m.levage){ list.push("levage"); if(m.levEquip==="fourches") list.push("fourches"); }
+  return list;
+}
+function periodFor(m){ return m.levage ? 6 : 12; }
+function clapetLabels(m){
+  const f=(TYPES[m.type]||{}).famille;
+  if(f==="chargeuse") return ["Vérins de levage des bras","Vérin de cavage (godet / tablier)"];
+  return ["Vérin de flèche","Vérin de balancier"];
+}
+function refsFor(m){
+  const r=["Code du travail, articles R. 4323-23 et R. 4323-24"];
+  if(m.type==="compacteur") r.push("Arrêté du 5 mars 1993 (compacteurs tandem exclus) – contrôle annuel recommandé");
+  else r.push("Arrêté du 5 mars 1993, article 2 – machines mobiles de terrassement à conducteur porté : VGP tous les 12 mois");
+  if(m.levage) r.push("Arrêté du 1er mars 2004, articles 22 et 23 – engin équipé pour le levage : VGP tous les 6 mois");
+  return r;
+}
+
+/* =====================================================================
+   Stockage local (IndexedDB, repli en mémoire)
+   ===================================================================== */
+const DB = (()=>{
+  let db=null; const mem={machines:{},vgps:{},kv:{}};
+  function open(){
+    return new Promise(res=>{
+      try{
+        const rq=indexedDB.open("vgp-engins",1);
+        rq.onupgradeneeded=()=>{const d=rq.result;["machines","vgps","kv"].forEach(s=>{if(!d.objectStoreNames.contains(s))d.createObjectStore(s);});};
+        rq.onsuccess=()=>{db=rq.result;res(true);};
+        rq.onerror=()=>res(false);
+      }catch(e){res(false);}
+    });
+  }
+  function all(store){
+    if(!db) return Promise.resolve(Object.values(mem[store]));
+    return new Promise(res=>{try{const rq=db.transaction(store).objectStore(store).getAll();rq.onsuccess=()=>res(rq.result||[]);rq.onerror=()=>res([]);}catch(e){res([]);}});
+  }
+  function get(store,key){
+    if(!db) return Promise.resolve(mem[store][key]);
+    return new Promise(res=>{try{const rq=db.transaction(store).objectStore(store).get(key);rq.onsuccess=()=>res(rq.result);rq.onerror=()=>res(undefined);}catch(e){res(undefined);}});
+  }
+  function put(store,key,val){
+    if(!db){mem[store][key]=val;return Promise.resolve();}
+    return new Promise(res=>{try{const tx=db.transaction(store,"readwrite");tx.objectStore(store).put(val,key);tx.oncomplete=()=>res();tx.onerror=()=>{toast("Erreur d'enregistrement");res();};}catch(e){res();}});
+  }
+  function del(store,key){
+    if(!db){delete mem[store][key];return Promise.resolve();}
+    return new Promise(res=>{try{const tx=db.transaction(store,"readwrite");tx.objectStore(store).delete(key);tx.oncomplete=()=>res();tx.onerror=()=>res();}catch(e){res();}});
+  }
+  return {open,all,get,put,del,persistent:()=>!!db};
+})();
+
+/* =====================================================================
+   État et utilitaires
+   ===================================================================== */
+const S = {machines:[],vgps:[],clients:[],settings:{entreprise:{nom:"",adresse:""},organisme:{nom:"",adresse:"",tel:"",logo:""},verif:{nom:"",fonction:"",societe:"",statut:"interne",qualif:""},avertissementVu:false},view:"home",mid:null,vid:null,filter:"",ftype:"",fclient:""};
+const app=document.getElementById("app");
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");};
+function addMonths(ds,n){ if(!ds) return ""; const [y,m,d]=ds.split("-").map(Number); const dt=new Date(y,m-1+n,d); if(dt.getDate()!==d) dt.setDate(0); return dt.getFullYear()+"-"+String(dt.getMonth()+1).padStart(2,"0")+"-"+String(dt.getDate()).padStart(2,"0"); }
+const fr=ds=>{ if(!ds) return "—"; const [y,m,d]=ds.split("-"); return d+"/"+m+"/"+y; };
+const daysBetween=(a,b)=>Math.round((new Date(b)-new Date(a))/86400000);
+const num=v=>{ if(v===""||v==null) return NaN; return parseFloat(String(v).replace(",",".")); };
+const fmt=(n,d=2)=>isFinite(n)?n.toLocaleString("fr-FR",{maximumFractionDigits:d}):"—";
+function getPath(o,p){return p.split(".").reduce((a,k)=>a==null?a:a[k],o);}
+function setPath(o,p,v){const ks=p.split(".");let c=o;for(let i=0;i<ks.length-1;i++){if(c[ks[i]]==null)c[ks[i]]=/^\d+$/.test(ks[i+1])?[]:{};c=c[ks[i]];}c[ks[ks.length-1]]=v;}
+const inFrame=(()=>{try{return window.self!==window.top;}catch(e){return true;}})();
+
+function toast(msg){const t=document.createElement("div");t.className="toast";t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2200);}
+function confirmBox(msg,okLabel="Confirmer",danger=true){
+  return new Promise(res=>{
+    const ov=document.getElementById("overlay");
+    ov.innerHTML=`<div class="modal-bg"><div class="modal"><p>${esc(msg)}</p><div class="row" style="justify-content:flex-end"><button class="btn" data-r="0">Annuler</button><button class="btn ${danger?"danger":"primary"}" data-r="1">${esc(okLabel)}</button></div></div></div>`;
+    ov.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{ov.innerHTML="";res(b.dataset.r==="1");});
+  });
+}
+const saveTimers={};
+function saveLater(store,obj){ clearTimeout(saveTimers[obj.id]); saveTimers[obj.id]=setTimeout(()=>DB.put(store,obj.id,obj),400); }
+function saveNow(store,obj){ clearTimeout(saveTimers[obj.id]); return DB.put(store,obj.id,obj); }
+const M=id=>S.machines.find(m=>m.id===id);
+const V=id=>S.vgps.find(v=>v.id===id);
+function mLabel(m){return [m.marque,m.modele].filter(Boolean).join(" ")||"(sans nom)";}
+const CL=id=>S.clients.find(c=>c.id===id);
+const clientOf=m=>CL(m?.clientId)||m?.client||null;
+function saveClients(){return DB.put("kv","clients",S.clients);}
+function upsert(arr,obj){const i=arr.findIndex(x=>x.id===obj.id);if(i>=0)arr[i]=obj;else arr.push(obj);}
+function readImage(file,max,type,q){
+  return new Promise((res,rej)=>{const url=URL.createObjectURL(file);const img=new Image();
+    img.onload=()=>{let w=img.width,h=img.height;if(w>max||h>max){const r=Math.min(max/w,max/h);w=Math.round(w*r);h=Math.round(h*r);}
+      const c=document.createElement("canvas");c.width=w;c.height=h;const x=c.getContext("2d");if(type==="image/jpeg"){x.fillStyle="#fff";x.fillRect(0,0,w,h);}x.drawImage(img,0,0,w,h);URL.revokeObjectURL(url);res(c.toDataURL(type,q));};
+    img.onerror=()=>{URL.revokeObjectURL(url);rej();};img.src=url;});
+}
+function downloadJson(obj,name){
+  const blob=new Blob([JSON.stringify(obj)],{type:"application/json"});const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1000);
+  toast(inFrame?"Téléchargement indisponible dans l'aperçu":"Fichier exporté");
+}
+const slug=s=>String(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-zA-Z0-9]+/g,"-").replace(/^-|-$/g,"").toLowerCase()||"export";
+function exportPack(machines,vgps,name){
+  const cids=new Set(machines.map(m=>m.clientId).filter(Boolean));
+  downloadJson({app:"vgp-engins",version:2,exportedAt:new Date().toISOString(),clients:S.clients.filter(c=>cids.has(c.id)),machines,vgps},name);
+}
+
+/* Statut d'un engin */
+function machineStatus(m){
+  const done=S.vgps.filter(v=>v.machineId===m.id&&v.status==="terminee").sort((a,b)=>b.date.localeCompare(a.date));
+  const draft=S.vgps.find(v=>v.machineId===m.id&&v.status!=="terminee");
+  if(!done.length) return {code:"jamais",label:"Aucune VGP",due:null,last:null,draft};
+  const last=done[0];
+  const due=last.prochaine||addMonths(last.date,periodFor(m));
+  const d=daysBetween(today(),due);
+  let code="ok",label="À jour – prochaine le "+fr(due);
+  if(d<0){code="retard";label="En retard depuis le "+fr(due);}
+  else if(d<=30){code="bientot";label="À faire avant le "+fr(due);}
+  return {code,label,due,last,draft,inapte:last.conclusion==="inapte"};
+}
+
+/* =====================================================================
+   Vues
+   ===================================================================== */
+function render(){
+  document.getElementById("overlay").innerHTML="";
+  app.oninput=app.onchange=app.onclick=null;
+  const v=S.view;
+  if(v==="home") renderHome();
+  else if(v==="machineForm") renderMachineForm();
+  else if(v==="machine") renderMachine();
+  else if(v==="vgp") renderVgp();
+  else if(v==="report") renderReport();
+  else if(v==="settings") renderSettings();
+  window.scrollTo(0,0);
+}
+function go(view,opts={}){Object.assign(S,{view},opts);render();}
+document.getElementById("btnHome").onclick=()=>go("home");
+document.getElementById("btnSettings").onclick=()=>go("settings");
+
+function bannerHtml(){
+  let h="";
+  if(inFrame) h+=`<div class="banner noprint">Mode aperçu : ici, l'impression, la sauvegarde de fichiers et l'appareil photo peuvent être bloqués. Installez l'appli sur la tablette pour l'utiliser sur le terrain.</div>`;
+  if(!DB.persistent()) h+=`<div class="banner noprint">Le stockage local n'est pas disponible : les données seront perdues à la fermeture de la page.</div>`;
+  return h;
+}
+
+/* ---------- Accueil / parc ---------- */
+function renderHome(){
+  document.getElementById("title").textContent="VGP Engins de chantier";
+  const st=S.machines.map(m=>({m,s:machineStatus(m)}));
+  const c={retard:0,bientot:0,ok:0,jamais:0}; st.forEach(x=>c[x.s.code]++);
+  const q=S.filter.trim().toLowerCase();
+  let list=st.filter(x=>(!S.ftype||x.m.type===S.ftype)&&(!S.fclient||x.m.clientId===S.fclient)&&(!q||[x.m.marque,x.m.modele,x.m.serie,x.m.parc,TYPES[x.m.type]?.label,clientOf(x.m)?.nom].join(" ").toLowerCase().includes(q)));
+  const order={retard:0,jamais:1,bientot:2,ok:3};
+  list.sort((a,b)=>order[a.s.code]-order[b.s.code]||(a.m.parc||"").localeCompare(b.m.parc||""));
+  app.innerHTML=bannerHtml()+(S.settings.avertissementVu?"":`<div class="card noprint" style="border-color:#f0d58a;background:#fffbea"><h3>Avant de commencer</h3><p class="hint" style="margin:0 0 10px">${esc(DISCLAIMER)}</p><button class="btn small" id="okDisc">J'ai compris</button></div>`)+(!S.settings.organisme.nom?`<div class="banner noprint">Renseignez votre structure (nom, logo) et vos clients dans <b>Réglages</b> : ils apparaîtront sur les rapports.</div>`:"")+`
+  <div class="stats">
+    <div class="stat retard"><b>${c.retard}</b><span>En retard</span></div>
+    <div class="stat bientot"><b>${c.bientot}</b><span>À faire sous 30 jours</span></div>
+    <div class="stat ok"><b>${c.ok}</b><span>À jour</span></div>
+    <div class="stat"><b>${c.jamais}</b><span>Jamais vérifiés</span></div>
+  </div>
+  <div class="toolbar">
+    <input class="search" id="q" placeholder="Rechercher (marque, n° de parc, n° de série…)" value="${esc(S.filter)}">
+    <select class="search" id="ft" style="flex:0 1 260px"><option value="">Tous les types</option>${Object.entries(TYPES).map(([k,t])=>`<option value="${k}" ${S.ftype===k?"selected":""}>${esc(t.label)}</option>`).join("")}</select>
+    ${S.clients.length?`<select class="search" id="fc" style="flex:0 1 260px"><option value="">Tous les clients</option>${S.clients.slice().sort((a,b)=>a.nom.localeCompare(b.nom)).map(c=>`<option value="${c.id}" ${S.fclient===c.id?"selected":""}>${esc(c.nom)}</option>`).join("")}</select>`:""}
+    <button class="btn primary" id="add">+ Ajouter un engin</button>
+  </div>
+  ${S.fclient&&CL(S.fclient)?`<div class="row" style="margin:-4px 0 12px"><span class="ref grow">Client : <b>${esc(CL(S.fclient).nom)}</b></span><button class="btn small" id="expClient">Exporter le parc de ce client</button></div>`:""}
+  ${list.length?`<div class="machines">${list.map(({m,s})=>`
+    <button class="mcard" data-id="${m.id}" type="button">
+      <div class="row"><span class="t grow">${esc(m.parc?m.parc+" · ":"")}${esc(mLabel(m))}</span>${s.inapte?`<span class="badge b-inapte">INAPTE</span>`:""}</div>
+      <div class="s">${clientOf(m)&&S.clients.length>1?"<b>"+esc(clientOf(m).nom)+"</b> · ":""}${esc(TYPES[m.type]?.label||"")} · ${esc(TRAINS[m.train]||"")}${m.serie?" · S/N "+esc(m.serie):""}</div>
+      <div class="row"><span class="badge b-${s.code}">${esc(s.label)}</span>${m.levage?`<span class="badge b-lev">Levage · 6 mois</span>`:`<span class="badge b-jamais">12 mois</span>`}${s.draft?`<span class="badge b-draft">VGP en cours</span>`:""}</div>
+    </button>`).join("")}</div>`
+  :`<div class="card empty">${S.machines.length?"Aucun engin ne correspond à la recherche.":"Aucun engin pour l'instant. Commencez par ajouter votre parc."}</div>`}`;
+  const qi=document.getElementById("q");
+  qi.oninput=()=>{S.filter=qi.value;const pos=qi.selectionStart;renderHome();const n=document.getElementById("q");n.focus();n.setSelectionRange(pos,pos);};
+  document.getElementById("ft").onchange=e=>{S.ftype=e.target.value;renderHome();};
+  const fc=document.getElementById("fc"); if(fc) fc.onchange=e=>{S.fclient=e.target.value;renderHome();};
+  const ec=document.getElementById("expClient"); if(ec) ec.onclick=()=>{const ms=S.machines.filter(m=>m.clientId===S.fclient);const ids=new Set(ms.map(m=>m.id));exportPack(ms,S.vgps.filter(v=>ids.has(v.machineId)),"parc-"+slug(CL(S.fclient).nom)+"-"+today()+".json");};
+  document.getElementById("add").onclick=()=>go("machineForm",{mid:null});
+  const od=document.getElementById("okDisc"); if(od) od.onclick=async()=>{S.settings.avertissementVu=true;await DB.put("kv","settings",S.settings);renderHome();};
+  app.querySelectorAll(".mcard").forEach(b=>b.onclick=()=>go("machine",{mid:b.dataset.id}));
+}
+
+/* ---------- Formulaire engin ---------- */
+function renderMachineForm(){
+  const isNew=!S.mid;
+  const m=isNew?{id:uid(),clientId:S.fclient||(S.clients.length===1?S.clients[0].id:""),type:"pelle_chenilles",train:"chenilles",levage:false,levEquip:"crochet",marque:"",modele:"",serie:"",parc:"",annee:"",heures:"",cmu:"",porteeCmu:"",notes:""}:JSON.parse(JSON.stringify(M(S.mid)));
+  document.getElementById("title").textContent=isNew?"Nouvel engin":"Modifier l'engin";
+  app.innerHTML=`
+  <div class="card">
+    <h2>${isNew?"Ajouter un engin":"Modifier l'engin"}</h2>
+    <div class="grid2" style="margin-bottom:12px">
+      <label class="f">Client (entreprise utilisatrice)<select id="f_client"><option value="">— Choisir —</option>${S.clients.slice().sort((a,b)=>a.nom.localeCompare(b.nom)).map(c=>`<option value="${c.id}" ${m.clientId===c.id?"selected":""}>${esc(c.nom)}</option>`).join("")}<option value="__new">+ Nouveau client…</option></select></label>
+      <div id="newClient" class="grid2" style="display:none;grid-column:1/-1">
+        <label class="f">Nom du nouveau client<input id="nc_nom"></label>
+        <label class="f">Adresse<input id="nc_adr"></label>
+      </div>
+    </div>
+    <div class="grid2">
+      <label class="f">Type d'engin<select id="f_type">${Object.entries(TYPES).map(([k,t])=>`<option value="${k}" ${m.type===k?"selected":""}>${esc(t.label)}</option>`).join("")}</select></label>
+      <label class="f">Train de roulement<select id="f_train">${Object.entries(TRAINS).map(([k,t])=>`<option value="${k}" ${m.train===k?"selected":""}>${t}</option>`).join("")}</select></label>
+      <label class="f">Marque<input id="f_marque" value="${esc(m.marque)}"></label>
+      <label class="f">Modèle<input id="f_modele" value="${esc(m.modele)}"></label>
+      <label class="f">N° de série<input id="f_serie" value="${esc(m.serie)}"></label>
+      <label class="f">N° de parc interne<input id="f_parc" value="${esc(m.parc)}"></label>
+      <label class="f">Année de mise en service<input id="f_annee" inputmode="numeric" value="${esc(m.annee)}"></label>
+      <label class="f">Masse en service (kg)<input id="f_masse" inputmode="decimal" value="${esc(m.masse||"")}"></label>
+    </div>
+    <div id="levBox" style="margin-top:14px"></div>
+    <div id="typeNote"></div>
+    <label class="f" style="margin-top:12px">Notes (équipements, particularités)<textarea id="f_notes">${esc(m.notes)}</textarea></label>
+  </div>
+  <div class="bottombar">
+    ${!isNew?`<button class="btn danger" id="del">Supprimer</button><span class="grow"></span>`:""}
+    <button class="btn" id="cancel">Annuler</button>
+    <button class="btn primary" id="save">Enregistrer</button>
+  </div>`;
+  const typeSel=document.getElementById("f_type");
+  const cs=document.getElementById("f_client"); cs.onchange=()=>{document.getElementById("newClient").style.display=cs.value==="__new"?"":"none";if(cs.value==="__new")document.getElementById("nc_nom").focus();};
+  function levBox(){
+    const t=TYPES[typeSel.value];
+    const box=document.getElementById("levBox");
+    document.getElementById("typeNote").innerHTML=t.note?`<div class="banner" style="margin-top:12px">${esc(t.note)}</div>`:"";
+    if(!t.lev){box.innerHTML=`<div class="hint">Cet engin n'est pas prévu pour le levage : VGP tous les 12 mois.</div>`;m.levage=false;return;}
+    box.innerHTML=`
+      <label class="check"><input type="checkbox" id="f_lev" ${m.levage?"checked":""}> Engin équipé ou utilisé pour le levage de charges (VGP tous les 6 mois)</label>
+      <div id="levFields" class="grid3" style="${m.levage?"":"display:none"}">
+        <label class="f">Équipement de levage<select id="f_levEquip">${Object.entries(LEV_EQUIP).map(([k,v])=>`<option value="${k}" ${m.levEquip===k?"selected":""}>${v}</option>`).join("")}</select></label>
+        <label class="f">Charge nominale maxi du tableau (kg)<input id="f_cmu" inputmode="decimal" value="${esc(m.cmu)}"></label>
+        <label class="f">Portée correspondante (m)<input id="f_porteeCmu" inputmode="decimal" value="${esc(m.porteeCmu)}"></label>
+      </div>`;
+    document.getElementById("f_lev").onchange=e=>{m.levage=e.target.checked;document.getElementById("levFields").style.display=m.levage?"":"none";};
+  }
+  typeSel.onchange=()=>{document.getElementById("f_train").value=TYPES[typeSel.value].train;levBox();};
+  levBox();
+  document.getElementById("cancel").onclick=()=>isNew?go("home"):go("machine");
+  if(!isNew) document.getElementById("del").onclick=async()=>{
+    const n=S.vgps.filter(v=>v.machineId===m.id).length;
+    if(!await confirmBox(`Supprimer cet engin et ses ${n} VGP enregistrée(s) ? Cette action est définitive.`,"Supprimer")) return;
+    for(const v of S.vgps.filter(v=>v.machineId===m.id)) await DB.del("vgps",v.id);
+    S.vgps=S.vgps.filter(v=>v.machineId!==m.id);
+    await DB.del("machines",m.id); S.machines=S.machines.filter(x=>x.id!==m.id);
+    toast("Engin supprimé"); go("home");
+  };
+  document.getElementById("save").onclick=async()=>{
+    const g=id=>document.getElementById(id)?.value.trim()??"";
+    Object.assign(m,{type:g("f_type"),train:g("f_train"),marque:g("f_marque"),modele:g("f_modele"),serie:g("f_serie"),parc:g("f_parc"),annee:g("f_annee"),masse:g("f_masse"),notes:g("f_notes")});
+    if(TYPES[m.type].lev&&m.levage){m.levEquip=g("f_levEquip");m.cmu=g("f_cmu");m.porteeCmu=g("f_porteeCmu");} else m.levage=false;
+    if(!m.marque&&!m.modele&&!m.parc){toast("Indiquez au moins la marque, le modèle ou le n° de parc");return;}
+    let cid=g("f_client");
+    if(cid==="__new"){const nom=g("nc_nom");if(!nom){toast("Indiquez le nom du nouveau client");return;}const c={id:uid(),nom,adresse:g("nc_adr"),contact:""};S.clients.push(c);await saveClients();cid=c.id;}
+    m.clientId=cid;
+    await saveNow("machines",m);
+    const i=S.machines.findIndex(x=>x.id===m.id); if(i>=0) S.machines[i]=m; else S.machines.push(m);
+    toast("Engin enregistré"); go("machine",{mid:m.id});
+  };
+}
+
+/* ---------- Fiche engin ---------- */
+function renderMachine(){
+  const m=M(S.mid); if(!m) return go("home");
+  const s=machineStatus(m);
+  document.getElementById("title").textContent=(m.parc?m.parc+" · ":"")+mLabel(m);
+  const hist=S.vgps.filter(v=>v.machineId===m.id).sort((a,b)=>b.date.localeCompare(a.date));
+  const cl={apte:"Apte",reserves:"Apte avec réserves",inapte:"Inapte"};
+  app.innerHTML=bannerHtml()+`
+  <div class="card">
+    <div class="row"><h2 class="grow" style="margin:0">${esc(mLabel(m))}</h2><button class="btn small" id="edit">Modifier</button></div>
+    <div class="grid2" style="margin-top:10px">
+      <div><span class="ref">Client</span><br>${esc(clientOf(m)?.nom||"—")}</div>
+      <div><span class="ref">Type</span><br>${esc(TYPES[m.type]?.label)} · ${esc(TRAINS[m.train])}</div>
+      <div><span class="ref">N° de série / n° de parc</span><br>${esc(m.serie||"—")} / ${esc(m.parc||"—")}</div>
+      <div><span class="ref">Mise en service</span><br>${esc(m.annee||"—")}</div>
+      <div><span class="ref">Levage</span><br>${m.levage?`Oui – ${esc(LEV_EQUIP[m.levEquip]||"")}${m.cmu?` – ${esc(m.cmu)} kg à ${esc(m.porteeCmu||"?")} m`:""}`:"Non"}</div>
+    </div>
+    <div class="row" style="margin-top:12px"><span class="badge b-${s.code}">${esc(s.label)}</span><span class="badge ${m.levage?"b-lev":"b-jamais"}">Périodicité : ${periodFor(m)} mois</span></div>
+    <div class="ref" style="margin-top:10px">${refsFor(m).map(esc).join("<br>")}</div>
+  </div>
+  <div class="row" style="margin-bottom:14px">
+    ${s.draft?`<button class="btn primary" id="cont">Reprendre la VGP en cours (${fr(s.draft.date)})</button>`:`<button class="btn primary" id="new">+ Nouvelle VGP</button>`}
+  </div>
+  <div class="card"><h3>Historique des VGP</h3>
+  ${hist.length?`<table class="hist">${hist.map(v=>`<tr>
+    <td>${fr(v.date)}</td>
+    <td>${v.status==="terminee"?`<span class="badge ${v.conclusion==="inapte"?"b-inapte":v.conclusion==="reserves"?"b-bientot":"b-ok"}">${cl[v.conclusion]||"—"}</span>`:`<span class="badge b-draft">En cours</span>`}</td>
+    <td class="ref">${esc(v.verif?.nom||"")}</td>
+    <td style="text-align:right"><button class="btn small" data-open="${v.id}">${v.status==="terminee"?"Rapport":"Ouvrir"}</button></td></tr>`).join("")}</table>`:`<div class="empty">Aucune VGP enregistrée.</div>`}
+  </div>`;
+  document.getElementById("edit").onclick=()=>go("machineForm",{mid:m.id});
+  const nb=document.getElementById("new"); if(nb) nb.onclick=()=>newVgp(m);
+  const cb=document.getElementById("cont"); if(cb) cb.onclick=()=>go("vgp",{vid:s.draft.id});
+  app.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{const v=V(b.dataset.open);go(v.status==="terminee"?"report":"vgp",{vid:v.id});});
+}
+
+async function newVgp(m){
+  const v={id:uid(),machineId:m.id,status:"brouillon",date:today(),lieu:"",heures:"",
+    verif:JSON.parse(JSON.stringify(S.settings.verif)),
+    machine:JSON.parse(JSON.stringify(m)),
+    client:JSON.parse(JSON.stringify(clientOf(m)||{nom:"",adresse:""})),
+    organisme:JSON.parse(JSON.stringify(S.settings.organisme||{})),
+    answers:{},
+    essais:{charge:"",accessoires:"",moyen:"",rows:[{pos:"axe",lame:"",portee:"",hauteur:"",tab:"",mvt:"",stab:"",obs:""},{pos:"travers",lame:"",portee:"",hauteur:"",tab:"",mvt:"",stab:"",obs:""}],
+      alarme:{portee:"",tab:"",visuel:"",coupure:"",obs:""},
+      clapets:{charge:"",portee:"",duree:"10",descente:"",maxi:"",a:"",b:"",secours:"",obs:""}},
+    conclusion:"",reserves:[],prochaine:"",chefNom:"",sigVerif:"",sigChef:"",createdAt:Date.now()};
+  S.vgps.push(v); await saveNow("vgps",v); go("vgp",{vid:v.id});
+}
+
+/* ---------- Saisie VGP ---------- */
+function itemHtml(v,secId,it){
+  const key=secId+"."+it[0]; const a=v.answers[key]||{};
+  return `<div class="item ${a.s==="NC"?"isnc":""}" data-key="${key}">
+    <div class="lbl">${esc(it[1])}</div>
+    <div class="seg">
+      ${[["C","Conforme"],["NC","Non conforme"],["SO","Sans objet"]].map(([s,l])=>`<button type="button" class="${s} ${a.s===s?"on":""}" data-st="${s}"><b>${s}</b> <span class="stl">${l}</span></button>`).join("")}
+      <button type="button" class="aux" data-obs>${a.obs?"Observation ✓":"+ Observation"}</button>
+      <button type="button" class="aux" data-photo>📷 Photo${a.photos?.length?" ("+a.photos.length+")":""}</button>
+    </div>
+    ${(a.s==="NC"||a.obs||a.showObs)?`<textarea class="obs" data-obsin placeholder="${a.s==="NC"?"Décrire le défaut (obligatoire)":"Observation"}">${esc(a.obs||"")}</textarea>`:""}
+    ${a.photos?.length?`<div class="photos">${a.photos.map((p,i)=>`<div class="ph"><img src="${p}" alt=""><button type="button" data-delph="${i}">×</button></div>`).join("")}</div>`:""}
+  </div>`;
+}
+function secStats(v,secId){
+  const items=SECTIONS[secId].items; let done=0,nc=0;
+  items.forEach(it=>{const a=v.answers[secId+"."+it[0]];if(a?.s){done++;if(a.s==="NC")nc++;}});
+  return {done,nc,total:items.length};
+}
+function allStats(v){
+  const m=v.machine; let done=0,total=0,nc=0,ncNoObs=0;
+  sectionsFor(m).forEach(sid=>SECTIONS[sid].items.forEach(it=>{total++;const a=v.answers[sid+"."+it[0]];if(a?.s){done++;if(a.s==="NC"){nc++;if(!a.obs)ncNoObs++;}}}));
+  return {done,total,nc,ncNoObs};
+}
+
+function renderVgp(){
+  const v=V(S.vid); if(!v) return go("home");
+  if(v.status!=="terminee"){const cm=M(v.machineId);if(cm){v.machine=JSON.parse(JSON.stringify(cm));v.client=JSON.parse(JSON.stringify(clientOf(cm)||{nom:"",adresse:""}));}v.organisme=JSON.parse(JSON.stringify(S.settings.organisme||{}));saveLater("vgps",v);}
+  const m=v.machine; const secs=sectionsFor(m); const locked=v.status==="terminee";
+  document.getElementById("title").textContent="VGP · "+(m.parc?m.parc+" · ":"")+mLabel(m);
+  const nav=[["sec-infos","Infos"]].concat(secs.map(s=>["sec-"+s,SECTIONS[s].title.replace("Train de roulement – ","Train : ").replace("Levage – ","Levage : ")]));
+  if(m.levage) nav.push(["sec-essais","Essais en charge"]);
+  nav.push(["sec-concl","Conclusion"]);
+  const vf=v.verif||{};
+  app.innerHTML=bannerHtml()+`
+  <nav class="secnav noprint" id="secnav">${nav.map(([id,l])=>`<a href="#" data-to="${id}" id="nav-${id}">${esc(l)}</a>`).join("")}</nav>
+  <div class="card" id="sec-infos">
+    <h2>Informations</h2>
+    <div class="grid3">
+      <label class="f">Date de la vérification<input type="date" data-v="date" value="${esc(v.date)}"></label>
+      <label class="f">Lieu (chantier, dépôt)<input data-v="lieu" value="${esc(v.lieu)}"></label>
+      <label class="f">Heures au compteur<input inputmode="numeric" data-v="heures" value="${esc(v.heures)}"></label>
+    </div>
+    <h3 style="margin-top:14px">Vérificateur</h3>
+    <div class="grid3">
+      <label class="f">Nom et prénom<input data-v="verif.nom" value="${esc(vf.nom)}"></label>
+      <label class="f">Fonction<input data-v="verif.fonction" value="${esc(vf.fonction)}"></label>
+      <label class="f">Société / organisme<input data-v="verif.societe" value="${esc(vf.societe)}"></label>
+      <label class="f">Statut<select data-v="verif.statut"><option value="interne" ${vf.statut!=="externe"?"selected":""}>Salarié de l'entreprise utilisatrice</option><option value="externe" ${vf.statut==="externe"?"selected":""}>Organisme ou société extérieure</option></select></label>
+      <label class="f" style="grid-column:span 2">Justificatifs de qualification<input data-v="verif.qualif" value="${esc(vf.qualif)}" placeholder="Formation, organisme, date…"></label>
+    </div>
+    <div class="ref" style="margin-top:10px">Client : ${esc(v.client?.nom||"—")}<br>Engin : ${esc(TYPES[m.type]?.label)} · ${esc(TRAINS[m.train])} · S/N ${esc(m.serie||"—")} · Parc ${esc(m.parc||"—")}${m.levage?" · Levage ("+esc(LEV_EQUIP[m.levEquip]||"")+")":""}</div>
+  </div>
+  ${secs.map(sid=>`<div class="card" id="sec-${sid}"><h2>${esc(SECTIONS[sid].title)}</h2>${SECTIONS[sid].items.map(it=>itemHtml(v,sid,it)).join("")}</div>`).join("")}
+  ${m.levage?essaisHtml(v):""}
+  <div class="card" id="sec-concl"></div>
+  <input type="file" accept="image/*" capture="environment" id="photoIn" style="display:none">
+  <div class="bottombar">
+    <span class="grow ref" id="progress"></span>
+    <button class="btn" id="back">Retour</button>
+    <button class="btn dark" id="preview">Aperçu du rapport</button>
+  </div>`;
+  renderConclusion(v);
+  updateNav(v);
+  if(locked){ app.querySelectorAll("input,select,textarea,.seg button,#sec-concl button").forEach(e=>{if(e.id!=="photoIn")e.disabled=true;}); app.insertAdjacentHTML("afterbegin",`<div class="banner">Cette VGP est terminée. <button class="btn small" id="reopen">Rouvrir pour modifier</button></div>`); document.getElementById("reopen").onclick=async()=>{v.status="brouillon";await saveNow("vgps",v);renderVgp();}; }
+  // navigation
+  app.querySelectorAll("[data-to]").forEach(a=>a.onclick=e=>{e.preventDefault();const el=document.getElementById(a.dataset.to);window.scrollTo({top:el.getBoundingClientRect().top+window.scrollY-110,behavior:"smooth"});});
+  document.getElementById("back").onclick=()=>go("machine",{mid:v.machineId});
+  document.getElementById("preview").onclick=()=>go("report",{vid:v.id});
+  // champs simples
+  app.oninput=onVgpInput;
+  app.onchange=onVgpInput;
+  // items
+  app.onclick=onVgpClick;
+  document.getElementById("photoIn").onchange=onPhoto;
+}
+let photoTarget=null;
+function onVgpInput(e){
+  const v=V(S.vid); if(!v||S.view!=="vgp") return; const t=e.target;
+  if(t.dataset.v!=null){ setPath(v,t.dataset.v,t.value); saveLater("vgps",v);
+    if(t.dataset.v.startsWith("essais.")) updateEssaisCalc(v);
+    if(t.dataset.v==="date"&&!v.prochaineManuelle){ renderConclusion(v); }
+    if(t.dataset.v.startsWith("verif.")){ S.settings.verif=JSON.parse(JSON.stringify(v.verif)); DB.put("kv","settings",S.settings);} }
+  if(t.dataset.obsin!=null){ const k=t.closest(".item").dataset.key; v.answers[k]=v.answers[k]||{}; v.answers[k].obs=t.value; saveLater("vgps",v);
+    const aux=t.closest(".item").querySelector("[data-obs]"); if(aux) aux.textContent=t.value?"Observation ✓":"+ Observation"; updateNav(v); }
+}
+function onVgpClick(e){
+  const v=V(S.vid); if(!v||S.view!=="vgp"||v.status==="terminee") return;
+  const b=e.target.closest("button"); if(!b) return;
+  const itemEl=b.closest(".item");
+  if(itemEl&&(b.dataset.st||b.dataset.obs!=null||b.dataset.photo!=null||b.dataset.delph!=null)){
+    const k=itemEl.dataset.key; const a=v.answers[k]=v.answers[k]||{};
+    if(b.dataset.st){ a.s=a.s===b.dataset.st?undefined:b.dataset.st; }
+    else if(b.dataset.obs!=null){ a.showObs=true; }
+    else if(b.dataset.photo!=null){ photoTarget=k; document.getElementById("photoIn").click(); return; }
+    else if(b.dataset.delph!=null){ a.photos.splice(+b.dataset.delph,1); }
+    saveLater("vgps",v);
+    const [sid,iid]=k.split("."); const it=SECTIONS[sid].items.find(x=>x[0]===iid);
+    itemEl.outerHTML=itemHtml(v,sid,it);
+    if(b.dataset.obs!=null||(b.dataset.st==="NC"&&a.s==="NC")){ const ta=document.querySelector(`.item[data-key="${k}"] textarea`); if(ta) ta.focus(); }
+    updateNav(v); refreshConclusionStats(v);
+    return;
+  }
+  if(b.dataset.addrow!=null){ v.essais.rows.push({pos:"axe",lame:"",portee:"",hauteur:"",tab:"",mvt:"",stab:"",obs:""}); saveLater("vgps",v); rerenderEssais(v); }
+  if(b.dataset.delrow!=null){ v.essais.rows.splice(+b.dataset.delrow,1); saveLater("vgps",v); rerenderEssais(v); }
+}
+function onPhoto(e){
+  const f=e.target.files[0]; e.target.value=""; if(!f||!photoTarget) return;
+  const v=V(S.vid); const k=photoTarget;
+  const img=new Image(); const url=URL.createObjectURL(f);
+  img.onload=()=>{ const max=1280; let w=img.width,h=img.height; if(w>max||h>max){const r=Math.min(max/w,max/h);w=Math.round(w*r);h=Math.round(h*r);}
+    const c=document.createElement("canvas"); c.width=w;c.height=h; c.getContext("2d").drawImage(img,0,0,w,h);
+    const data=c.toDataURL("image/jpeg",0.72); URL.revokeObjectURL(url);
+    const a=v.answers[k]=v.answers[k]||{}; (a.photos=a.photos||[]).push(data); saveNow("vgps",v);
+    const [sid,iid]=k.split("."); const it=SECTIONS[sid].items.find(x=>x[0]===iid);
+    const el=document.querySelector(`.item[data-key="${k}"]`); if(el) el.outerHTML=itemHtml(v,sid,it); toast("Photo ajoutée"); };
+  img.onerror=()=>toast("Image illisible");
+  img.src=url;
+}
+function updateNav(v){
+  sectionsFor(v.machine).forEach(sid=>{const st=secStats(v,sid);const a=document.getElementById("nav-sec-"+sid);if(!a)return;a.classList.toggle("done",st.done===st.total&&!st.nc);a.classList.toggle("hasnc",st.nc>0);});
+  const s=allStats(v); const p=document.getElementById("progress"); if(p) p.textContent=`${s.done}/${s.total} points renseignés · ${s.nc} non conforme(s)`;
+}
+
+/* ---------- Essais en charge (levage) ---------- */
+function essaisHtml(v){ return `<div class="card" id="sec-essais">${essaisInner(v)}</div>`; }
+function essaisInner(v){
+  const e=v.essais, m=v.machine; const cl=clapetLabels(m);
+  const yn=(path,val,withSO)=>`<select data-v="${path}"><option value=""></option><option value="oui" ${val==="oui"?"selected":""}>Oui</option><option value="non" ${val==="non"?"selected":""}>Non</option>${withSO?`<option value="so" ${val==="so"?"selected":""}>SO</option>`:""}</select>`;
+  return `
+  <h2>Essais de fonctionnement en charge</h2>
+  <div class="hint">Charge de masse connue (lest marqué ou pesée). Comptez tout ce qui est suspendu : élingues, manilles, palonnier. Portée mesurée depuis l'axe de rotation jusqu'à la verticale du crochet. Ne jamais dépasser 1,1 fois la charge du tableau.</div>
+  <div class="grid3">
+    <label class="f">Masse de la charge d'essai (kg)<input inputmode="decimal" data-v="essais.charge" value="${esc(e.charge)}"></label>
+    <label class="f">Masse des accessoires (kg)<input inputmode="decimal" data-v="essais.accessoires" value="${esc(e.accessoires)}"></label>
+    <label class="f">Charge totale (kg)<input id="totCharge" disabled value=""></label>
+  </div>
+  <label class="f" style="margin-top:10px">Moyen de détermination de la masse<input data-v="essais.moyen" value="${esc(e.moyen)}" placeholder="Lest marqué, peson, pont-bascule…"></label>
+
+  <h3 style="margin-top:16px">1. Essais par configuration</h3>
+  <div class="hint">Au minimum : dans l'axe et en travers, à courte et à grande portée, dans les configurations réellement utilisées.</div>
+  <div class="scroll"><table class="t" id="rowsTable"><thead><tr><th>N°</th><th>Position</th><th>Lame / stab.</th><th>Portée (m)</th><th>Hauteur crochet (m)</th><th>Charge du tableau (kg)</th><th>Rapport essai / tableau</th><th>Mouvements OK</th><th>Stabilité OK</th><th>Observations</th><th></th></tr></thead><tbody>
+  ${e.rows.map((r,i)=>`<tr>
+    <td>${i+1}</td>
+    <td><select data-v="essais.rows.${i}.pos"><option value="axe" ${r.pos==="axe"?"selected":""}>Dans l'axe</option><option value="travers" ${r.pos==="travers"?"selected":""}>En travers</option><option value="360" ${r.pos==="360"?"selected":""}>360°</option></select></td>
+    <td><select data-v="essais.rows.${i}.lame"><option value=""></option><option value="baissee" ${r.lame==="baissee"?"selected":""}>Baissée</option><option value="levee" ${r.lame==="levee"?"selected":""}>Levée</option><option value="so" ${r.lame==="so"?"selected":""}>SO</option></select></td>
+    <td><input inputmode="decimal" data-v="essais.rows.${i}.portee" value="${esc(r.portee)}"></td>
+    <td><input inputmode="decimal" data-v="essais.rows.${i}.hauteur" value="${esc(r.hauteur)}"></td>
+    <td><input inputmode="decimal" data-v="essais.rows.${i}.tab" value="${esc(r.tab)}"></td>
+    <td class="calc" data-ratio="${i}">—</td>
+    <td>${yn(`essais.rows.${i}.mvt`,r.mvt)}</td>
+    <td>${yn(`essais.rows.${i}.stab`,r.stab)}</td>
+    <td><input data-v="essais.rows.${i}.obs" value="${esc(r.obs)}" style="min-width:140px"></td>
+    <td><button type="button" class="btn small danger" data-delrow="${i}">×</button></td></tr>`).join("")}
+  </tbody></table></div>
+  <button type="button" class="btn small" data-addrow style="margin-top:8px">+ Ajouter un essai</button>
+
+  <h3 style="margin-top:16px">2. Avertisseur ou limiteur de surcharge</h3>
+  <div class="hint">Avec la charge d'essai, augmentez doucement la portée jusqu'au déclenchement. Le rapport charge d'essai / charge du tableau au déclenchement doit être supérieur à 1 et au plus égal à 1,1 (sauf autre valeur de la notice).</div>
+  <div class="grid3">
+    <label class="f">Portée au déclenchement (m)<input inputmode="decimal" data-v="essais.alarme.portee" value="${esc(e.alarme.portee)}"></label>
+    <label class="f">Charge du tableau à cette portée (kg)<input inputmode="decimal" data-v="essais.alarme.tab" value="${esc(e.alarme.tab)}"></label>
+    <label class="f">Rapport au déclenchement<input id="alarmeRatio" disabled></label>
+    <label class="f">Alarme visuelle et sonore en cabine${yn("essais.alarme.visuel",e.alarme.visuel)}</label>
+    <label class="f">Coupure des mouvements aggravants (si limiteur)${yn("essais.alarme.coupure",e.alarme.coupure,true)}</label>
+    <label class="f">Observations<input data-v="essais.alarme.obs" value="${esc(e.alarme.obs)}"></label>
+  </div>
+  <div id="alarmeVerdict" class="calc" style="margin-top:6px"></div>
+
+  <h3 style="margin-top:16px">3. Maintien de la charge (clapets de sécurité)</h3>
+  <div class="hint">Charge levée et immobilisée, moteur coupé ou commandes relâchées. À faire avec la charge la plus lourde disponible, à courte portée.</div>
+  <div class="grid3">
+    <label class="f">Charge utilisée (kg)<input inputmode="decimal" data-v="essais.clapets.charge" value="${esc(e.clapets.charge)}"></label>
+    <label class="f">Portée (m)<input inputmode="decimal" data-v="essais.clapets.portee" value="${esc(e.clapets.portee)}"></label>
+    <label class="f">Durée d'observation (min)<input inputmode="decimal" data-v="essais.clapets.duree" value="${esc(e.clapets.duree)}"></label>
+    <label class="f">Descente mesurée (mm)<input inputmode="decimal" data-v="essais.clapets.descente" value="${esc(e.clapets.descente)}"></label>
+    <label class="f">Descente maxi admise par la notice (mm)<input inputmode="decimal" data-v="essais.clapets.maxi" value="${esc(e.clapets.maxi)}"></label>
+    <label class="f">Résultat<input id="clapetVerdict" disabled></label>
+    <label class="f">${esc(cl[0])} : pas de chute${yn("essais.clapets.a",e.clapets.a,true)}</label>
+    <label class="f">${esc(cl[1])} : pas de chute${yn("essais.clapets.b",e.clapets.b,true)}</label>
+    <label class="f">Descente de secours / procédure de dépose${yn("essais.clapets.secours",e.clapets.secours,true)}</label>
+  </div>
+  <label class="f" style="margin-top:10px">Observations<input data-v="essais.clapets.obs" value="${esc(e.clapets.obs)}"></label>`;
+}
+function rerenderEssais(v){ const el=document.getElementById("sec-essais"); el.innerHTML=essaisInner(v); updateEssaisCalc(v); refreshConclusionStats(v); }
+function essaisEval(v){
+  const e=v.essais; const tot=num(e.charge)+(isNaN(num(e.accessoires))?0:num(e.accessoires));
+  const rows=e.rows.map(r=>{const tab=num(r.tab);const ratio=tot/tab;let cls="",txt="—";
+    if(isFinite(ratio)&&tab>0){txt=fmt(ratio,2); if(ratio>1.1){cls="nc";txt+=" – surcharge !";} else if(ratio<0.9){cls="warn";txt+=" – sous la charge nominale";} else cls="ok";}
+    const fail=r.mvt==="non"||r.stab==="non"||ratio>1.1; return {ratio,cls,txt,fail};});
+  const at=num(e.alarme.tab), ar=tot/at; let al={txt:"",cls:"",ok:null};
+  if(isFinite(ar)&&at>0){ if(ar>1&&ar<=1.1){al={txt:"Déclenchement conforme (rapport "+fmt(ar,2)+")",cls:"ok",ok:true};} else if(ar<=1){al={txt:"Déclenchement avant la charge du tableau (rapport "+fmt(ar,2)+") : vérifier le réglage",cls:"warn",ok:false};} else {al={txt:"Déclenchement trop tardif (rapport "+fmt(ar,2)+" > 1,1) : non conforme",cls:"nc",ok:false};} }
+  if(e.alarme.visuel==="non"||e.alarme.coupure==="non") al.ok=false;
+  const d=num(e.clapets.descente), mx=num(e.clapets.maxi); let cp={txt:"",ok:null};
+  if(isFinite(d)&&isFinite(mx)) cp=d<=mx?{txt:"Conforme ("+fmt(d,0)+" mm ≤ "+fmt(mx,0)+" mm)",ok:true}:{txt:"Non conforme ("+fmt(d,0)+" mm > "+fmt(mx,0)+" mm)",ok:false};
+  if(e.clapets.a==="non"||e.clapets.b==="non") cp.ok=false;
+  return {tot,rows,al,cp};
+}
+function updateEssaisCalc(v){
+  if(!v.machine.levage) return; const r=essaisEval(v);
+  const t=document.getElementById("totCharge"); if(t) t.value=isFinite(r.tot)?fmt(r.tot,1)+" kg":"";
+  r.rows.forEach((x,i)=>{const c=document.querySelector(`[data-ratio="${i}"]`); if(c){c.textContent=x.txt;c.className="calc "+x.cls;}});
+  const ar=document.getElementById("alarmeRatio"); const at=num(v.essais.alarme.tab); if(ar) ar.value=isFinite(r.tot/at)&&at>0?fmt(r.tot/at,2):"";
+  const av=document.getElementById("alarmeVerdict"); if(av){av.textContent=r.al.txt;av.className="calc "+r.al.cls;}
+  const cv=document.getElementById("clapetVerdict"); if(cv) cv.value=r.cp.txt;
+  refreshConclusionStats(v);
+}
+
+/* ---------- Conclusion et signatures ---------- */
+function ncList(v){
+  const out=[]; sectionsFor(v.machine).forEach(sid=>SECTIONS[sid].items.forEach(it=>{const a=v.answers[sid+"."+it[0]];if(a?.s==="NC")out.push({sec:SECTIONS[sid].title,label:it[1],obs:a.obs||""});}));
+  if(v.machine.levage){ const r=essaisEval(v);
+    r.rows.forEach((x,i)=>{if(x.fail)out.push({sec:"Essais en charge",label:"Essai n° "+(i+1),obs:v.essais.rows[i].obs||""});});
+    if(r.al.ok===false) out.push({sec:"Essais en charge",label:"Avertisseur / limiteur de surcharge",obs:r.al.txt||v.essais.alarme.obs});
+    if(r.cp.ok===false) out.push({sec:"Essais en charge",label:"Maintien de la charge (clapets)",obs:r.cp.txt||v.essais.clapets.obs}); }
+  return out;
+}
+function refreshConclusionStats(v){ const el=document.getElementById("conclStats"); if(el) el.innerHTML=conclStatsHtml(v); }
+function conclStatsHtml(v){
+  const s=allStats(v), nc=ncList(v);
+  const missing=s.total-s.done;
+  return `<div class="row">${missing?`<span class="badge b-bientot">${missing} point(s) non renseigné(s)</span>`:`<span class="badge b-ok">Tous les points sont renseignés</span>`}
+    ${nc.length?`<span class="badge b-retard">${nc.length} non-conformité(s)</span>`:`<span class="badge b-ok">Aucune non-conformité</span>`}
+    ${s.ncNoObs?`<span class="badge b-retard">${s.ncNoObs} NC sans observation</span>`:""}</div>
+    ${nc.length?`<ul style="margin:8px 0 0;padding-left:20px">${nc.map(n=>`<li><b>${esc(n.label)}</b> <span class="ref">(${esc(n.sec)})</span>${n.obs?" – "+esc(n.obs):""}</li>`).join("")}</ul>`:""}`;
+}
+function renderConclusion(v){
+  const el=document.getElementById("sec-concl"); const m=v.machine;
+  const auto=addMonths(v.date,periodFor(m));
+  if(!v.prochaineManuelle) v.prochaine=auto;
+  el.innerHTML=`
+    <h2>Conclusion</h2>
+    <div id="conclStats">${conclStatsHtml(v)}</div>
+    <div class="radio-big" style="margin-top:14px">
+      ${[["apte","Apte","Aucun défaut de nature à créer un danger."],["reserves","Apte avec réserves","Défauts à corriger dans les délais indiqués."],["inapte","Inapte","Utilisation interdite jusqu'à correction et nouvelle vérification."]].map(([k,t,d])=>`
+      <label class="${v.conclusion===k?"sel-"+k:""}"><input type="radio" name="concl" value="${k}" ${v.conclusion===k?"checked":""}><span><b>${t}</b><br><span class="ref">${d}</span></span></label>`).join("")}
+    </div>
+    <h3 style="margin-top:16px">Réserves et délais de correction</h3>
+    <div id="resList">${resHtml(v)}</div>
+    <div class="row" style="margin-top:8px"><button type="button" class="btn small" id="addRes">+ Ajouter une réserve</button><button type="button" class="btn small" id="fillRes">Reprendre les non-conformités</button></div>
+    <div class="grid2" style="margin-top:16px">
+      <label class="f">Prochaine VGP au plus tard le (${periodFor(m)} mois)<input type="date" id="prochaine" value="${esc(v.prochaine)}"></label>
+      <label class="f">Nom et qualité du chef d'établissement ou de son représentant<input data-v="chefNom" value="${esc(v.chefNom)}"></label>
+    </div>
+    <div class="grid2" style="margin-top:16px">
+      <div><div class="ref">Signature du vérificateur</div><div class="sigwrap"><canvas id="sigVerif"></canvas><div class="ph" id="ph_sigVerif">Signer ici</div></div><button type="button" class="btn small" data-clear="sigVerif" style="margin-top:6px">Effacer</button></div>
+      <div><div class="ref">Signature du chef d'établissement (prise de connaissance)</div><div class="sigwrap"><canvas id="sigChef"></canvas><div class="ph" id="ph_sigChef">Signer ici</div></div><button type="button" class="btn small" data-clear="sigChef" style="margin-top:6px">Effacer</button></div>
+    </div>
+    <div class="row" style="margin-top:16px;justify-content:flex-end"><button type="button" class="btn primary" id="finish">Terminer la VGP</button></div>`;
+  el.querySelectorAll('input[name="concl"]').forEach(r=>r.onchange=()=>{v.conclusion=r.value;saveLater("vgps",v);el.querySelectorAll(".radio-big label").forEach(l=>{const i=l.querySelector("input");l.className=i.checked?"sel-"+i.value:"";});});
+  document.getElementById("prochaine").onchange=e=>{v.prochaine=e.target.value;v.prochaineManuelle=true;saveLater("vgps",v);};
+  document.getElementById("addRes").onclick=()=>{v.reserves.push({texte:"",delai:""});saveLater("vgps",v);document.getElementById("resList").innerHTML=resHtml(v);};
+  document.getElementById("fillRes").onclick=()=>{const ex=new Set(v.reserves.map(r=>r.texte));ncList(v).forEach(n=>{const t=n.label+(n.obs?" : "+n.obs:"");if(!ex.has(t))v.reserves.push({texte:t,delai:""});});saveLater("vgps",v);document.getElementById("resList").innerHTML=resHtml(v);};
+  el.onclick=e=>{const b=e.target.closest("[data-delres]");if(b){v.reserves.splice(+b.dataset.delres,1);saveLater("vgps",v);document.getElementById("resList").innerHTML=resHtml(v);}
+    const c=e.target.closest("[data-clear]");if(c){v[c.dataset.clear]="";saveLater("vgps",v);initSig(v,c.dataset.clear);}};
+  el.oninput=e=>{const t=e.target;if(t.dataset.res!=null){const [i,f]=t.dataset.res.split(".");v.reserves[+i][f]=t.value;saveLater("vgps",v);}};
+  document.getElementById("finish").onclick=()=>finishVgp(v);
+  initSig(v,"sigVerif"); initSig(v,"sigChef");
+  updateEssaisCalc(v);
+}
+function resHtml(v){
+  if(!v.reserves.length) return `<div class="hint">Aucune réserve.</div>`;
+  return v.reserves.map((r,i)=>`<div class="row" style="margin-bottom:8px"><input class="search" data-res="${i}.texte" value="${esc(r.texte)}" placeholder="Réserve"><input class="search" style="flex:0 1 200px;min-width:140px" data-res="${i}.delai" value="${esc(r.delai)}" placeholder="Délai (ex. 15 jours)"><button type="button" class="btn small danger" data-delres="${i}">×</button></div>`).join("");
+}
+function initSig(v,key){
+  const c=document.getElementById(key); if(!c) return;
+  const ph=document.getElementById("ph_"+key);
+  const ratio=window.devicePixelRatio||1; const rect=c.getBoundingClientRect();
+  c.width=Math.max(300,rect.width)*ratio; c.height=180*ratio;
+  const ctx=c.getContext("2d"); ctx.scale(ratio,ratio); ctx.lineWidth=2.4; ctx.lineCap="round"; ctx.lineJoin="round"; ctx.strokeStyle="#111";
+  ph.style.display=v[key]?"none":"";
+  if(v[key]){const im=new Image();im.onload=()=>ctx.drawImage(im,0,0,c.width/ratio,c.height/ratio);im.src=v[key];}
+  let drawing=false,last=null;
+  const pos=e=>{const r=c.getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top];};
+  c.onpointerdown=e=>{if(v.status==="terminee")return;drawing=true;last=pos(e);c.setPointerCapture(e.pointerId);ph.style.display="none";};
+  c.onpointermove=e=>{if(!drawing)return;const p=pos(e);ctx.beginPath();ctx.moveTo(last[0],last[1]);ctx.lineTo(p[0],p[1]);ctx.stroke();last=p;};
+  c.onpointerup=c.onpointercancel=()=>{if(!drawing)return;drawing=false;v[key]=c.toDataURL("image/png");saveLater("vgps",v);};
+}
+async function finishVgp(v){
+  const s=allStats(v);
+  if(!v.date){toast("Indiquez la date de la vérification");return;}
+  if(!v.verif?.nom){toast("Indiquez le nom du vérificateur");document.querySelector('[data-v="verif.nom"]').focus();return;}
+  if(!v.conclusion){toast("Choisissez la conclusion");return;}
+  if(s.ncNoObs){toast("Décrivez chaque non-conformité dans son observation");return;}
+  if(!v.sigVerif){toast("La signature du vérificateur est nécessaire");return;}
+  if(s.done<s.total && !await confirmBox(`${s.total-s.done} point(s) ne sont pas renseignés. Terminer quand même ?`,"Terminer",false)) return;
+  if(ncList(v).length&&v.conclusion==="apte"&&!await confirmBox("Des non-conformités sont relevées mais la conclusion est « Apte ». Confirmer ?","Confirmer",false)) return;
+  v.status="terminee"; v.finishedAt=Date.now(); await saveNow("vgps",v);
+  toast("VGP terminée"); go("report",{vid:v.id});
+}
+
+/* ---------- Rapport imprimable ---------- */
+function orgHead(org){
+  if(!org||(!org.nom&&!org.logo)) return "";
+  return `<div class="row" style="border-bottom:2px solid #000;padding-bottom:8px;margin-bottom:10px">${org.logo?`<img src="${org.logo}" alt="" style="max-height:60px;max-width:180px">`:""}<div class="grow"><b style="font-size:15px">${esc(org.nom||"")}</b><br><span class="small">${esc(org.adresse||"")}${org.tel?" · "+esc(org.tel):""}</span></div></div>`;
+}
+function renderReport(){
+  const v=V(S.vid); if(!v) return go("home");
+  const m=v.machine; const vf=v.verif||{};
+  const org=v.organisme||S.settings.organisme||{};
+  const ent=(v.client&&v.client.nom)?v.client:(clientOf(M(v.machineId))||S.settings.entreprise||{});
+  document.getElementById("title").textContent="Rapport VGP · "+(m.parc?m.parc+" · ":"")+mLabel(m);
+  const cl={apte:"APTE",reserves:"APTE AVEC RÉSERVES",inapte:"INAPTE – UTILISATION INTERDITE"};
+  const box=b=>`<span class="box">${b?"X":""}</span>`;
+  const secs=sectionsFor(m);
+  const photos=[];
+  const secHtml=secs.map(sid=>`<h2>${esc(SECTIONS[sid].title)}</h2><table class="chk"><tr><th>Point contrôlé</th><th class="st">Rés.</th><th>Observations</th></tr>
+    ${SECTIONS[sid].items.map(it=>{const a=v.answers[sid+"."+it[0]]||{};if(a.photos?.length)photos.push({label:it[1],obs:a.obs,ph:a.photos});return `<tr><td>${esc(it[1])}</td><td class="st ${a.s||""}">${a.s||"—"}</td><td>${esc(a.obs||"")}${a.photos?.length?` <span class="small">(${a.photos.length} photo${a.photos.length>1?"s":""})</span>`:""}</td></tr>`;}).join("")}</table>`).join("");
+  let essais="";
+  if(m.levage){ const e=v.essais, r=essaisEval(v); const cpl=clapetLabels(m); const yn=x=>x==="oui"?"Oui":x==="non"?"Non":x==="so"?"SO":"—";
+    const pos={axe:"Dans l'axe",travers:"En travers","360":"360°"}, lame={baissee:"Baissée",levee:"Levée",so:"SO"};
+    essais=`<h2>Essais de fonctionnement en charge</h2>
+    <table><tr><th>Charge d'essai</th><td>${esc(e.charge||"—")} kg + accessoires ${esc(e.accessoires||"0")} kg = <b>${isFinite(r.tot)?fmt(r.tot,1):"—"} kg</b></td></tr><tr><th>Détermination de la masse</th><td>${esc(e.moyen||"—")}</td></tr></table>
+    <table><tr><th>N°</th><th>Position</th><th>Lame / stab.</th><th>Portée (m)</th><th>Hauteur (m)</th><th>Charge tableau (kg)</th><th>Rapport</th><th>Mouvements</th><th>Stabilité</th><th>Observations</th></tr>
+    ${e.rows.map((x,i)=>`<tr><td>${i+1}</td><td>${pos[x.pos]||""}</td><td>${lame[x.lame]||"—"}</td><td>${esc(x.portee||"—")}</td><td>${esc(x.hauteur||"—")}</td><td>${esc(x.tab||"—")}</td><td>${r.rows[i].txt}</td><td>${yn(x.mvt)}</td><td>${yn(x.stab)}</td><td>${esc(x.obs||"")}</td></tr>`).join("")}</table>
+    <table><tr><th colspan="2">Avertisseur / limiteur de surcharge</th></tr>
+      <tr><td>Portée au déclenchement / charge du tableau</td><td>${esc(e.alarme.portee||"—")} m / ${esc(e.alarme.tab||"—")} kg</td></tr>
+      <tr><td>Résultat</td><td><b>${esc(r.al.txt||"—")}</b></td></tr>
+      <tr><td>Alarme visuelle et sonore / coupure des mouvements aggravants</td><td>${yn(e.alarme.visuel)} / ${yn(e.alarme.coupure)}</td></tr>
+      ${e.alarme.obs?`<tr><td>Observations</td><td>${esc(e.alarme.obs)}</td></tr>`:""}</table>
+    <table><tr><th colspan="2">Maintien de la charge (clapets de sécurité)</th></tr>
+      <tr><td>Charge / portée / durée</td><td>${esc(e.clapets.charge||"—")} kg / ${esc(e.clapets.portee||"—")} m / ${esc(e.clapets.duree||"—")} min</td></tr>
+      <tr><td>Descente mesurée / maxi notice</td><td>${esc(e.clapets.descente||"—")} mm / ${esc(e.clapets.maxi||"—")} mm – <b>${esc(r.cp.txt||"")}</b></td></tr>
+      <tr><td>${esc(cpl[0])} / ${esc(cpl[1])} : pas de chute</td><td>${yn(e.clapets.a)} / ${yn(e.clapets.b)}</td></tr>
+      <tr><td>Descente de secours / procédure de dépose</td><td>${yn(e.clapets.secours)}</td></tr>
+      ${e.clapets.obs?`<tr><td>Observations</td><td>${esc(e.clapets.obs)}</td></tr>`:""}</table>`; }
+  const sig=(d)=>`<div class="sig">${d?`<img src="${d}" alt="signature">`:""}</div>`;
+  const resT=v.reserves.filter(r=>r.texte).length?`<table><tr><th>Réserve</th><th style="width:160px">Délai</th></tr>${v.reserves.filter(r=>r.texte).map(r=>`<tr><td>${esc(r.texte)}</td><td>${esc(r.delai)}</td></tr>`).join("")}</table>`:`<p>Aucune réserve.</p>`;
+  app.innerHTML=bannerHtml()+`
+  <div class="row noprint" style="margin-bottom:14px">
+    <button class="btn" id="back">Retour</button><span class="grow"></span>
+    ${v.status!=="terminee"?`<span class="badge b-draft">Brouillon – VGP non terminée</span>`:""}
+    <button class="btn" id="edit">${v.status==="terminee"?"Voir la saisie":"Continuer la saisie"}</button>
+    <button class="btn" id="expVgp">Exporter cette VGP</button>
+    <button class="btn primary" id="print">Imprimer / PDF</button>
+  </div>
+  <div class="report">
+    ${orgHead(org)}
+    <div class="row"><div class="grow"><h1>Rapport de vérification générale périodique</h1><div>${esc(TYPES[m.type]?.label)}${m.levage?" équipé(e) pour le levage":""}</div></div></div>
+    ${v.status!=="terminee"?`<p style="color:#c62828;font-weight:700">BROUILLON – document non validé</p>`:""}
+    <h2>Engin et vérification</h2>
+    <table>
+      <tr><th>Entreprise utilisatrice</th><td colspan="3">${esc(ent.nom||"—")}${ent.adresse?" – "+esc(ent.adresse):""}</td></tr>
+      <tr><th>Marque / modèle</th><td>${esc(mLabel(m))}</td><th>N° de série</th><td>${esc(m.serie||"—")}</td></tr>
+      <tr><th>N° de parc</th><td>${esc(m.parc||"—")}</td><th>Mise en service</th><td>${esc(m.annee||"—")}</td></tr>
+      <tr><th>Train de roulement</th><td>${esc(TRAINS[m.train])}</td><th>Heures compteur</th><td>${esc(v.heures||"—")}</td></tr>
+      ${m.levage?`<tr><th>Équipement de levage</th><td>${esc(LEV_EQUIP[m.levEquip]||"")}</td><th>Charge nominale maxi</th><td>${esc(m.cmu||"—")} kg à ${esc(m.porteeCmu||"—")} m</td></tr>`:""}
+      <tr><th>Date</th><td>${fr(v.date)}</td><th>Lieu</th><td>${esc(v.lieu||"—")}</td></tr>
+      <tr><th>Vérificateur</th><td colspan="3">${esc(vf.nom||"—")}${vf.fonction?", "+esc(vf.fonction):""}${vf.societe?" – "+esc(vf.societe):""} (${vf.statut==="externe"?"organisme extérieur":"salarié de l'entreprise"})</td></tr>
+    </table>
+    <div class="small">Références : ${refsFor(m).map(esc).join(" ; ")}. Résultats : C = conforme, NC = non conforme, SO = sans objet (point ne concernant pas cet engin).</div>
+    ${secHtml}
+    ${essais}
+    <h2>Conclusion</h2>
+    <div class="concl">${cl[v.conclusion]||"NON RENSEIGNÉE"}</div>
+    ${resT}
+    <p><b>Prochaine VGP au plus tard le : ${fr(v.prochaine)}</b> (périodicité ${periodFor(m)} mois)</p>
+    <table><tr><th>Le vérificateur</th><th>Le chef d'établissement ou son représentant</th></tr>
+      <tr><td>${esc(vf.nom||"")}</td><td>${esc(v.chefNom||"")}</td></tr>
+      <tr><td>${sig(v.sigVerif)}</td><td>${sig(v.sigChef)}</td></tr></table>
+    ${photos.length?`<h2>Photos</h2>${photos.map(p=>`<div style="margin-bottom:8px;break-inside:avoid"><b>${esc(p.label)}</b>${p.obs?" – "+esc(p.obs):""}<div class="phs">${p.ph.map(x=>`<img src="${x}" alt="">`).join("")}</div></div>`).join("")}`:""}
+
+    <div class="pb"></div>
+    ${orgHead(org)}
+    <h1 style="margin-top:6px">Attestation de vérification générale périodique</h1>
+    <div>${esc(TYPES[m.type]?.label)}${m.levage?" utilisé(e) pour le levage de charges":""}</div>
+    <div class="small" style="margin:6px 0 10px">${refsFor(m).map(esc).join(" ; ")}.</div>
+    <h2>Vérificateur</h2>
+    <table><tr><th>Nom et prénom</th><td>${esc(vf.nom||"")}</td></tr><tr><th>Fonction</th><td>${esc(vf.fonction||"")}</td></tr>
+      <tr><th>Société ou organisme</th><td>${esc(vf.societe||"")}</td></tr>
+      <tr><th>Statut</th><td>${box(vf.statut!=="externe")} Salarié de l'entreprise utilisatrice &nbsp; ${box(vf.statut==="externe")} Organisme ou société extérieure</td></tr>
+      <tr><th>Justificatifs de qualification</th><td>${esc(vf.qualif||"")}</td></tr></table>
+    <h2>Engin vérifié</h2>
+    <table><tr><th>Entreprise utilisatrice</th><td>${esc(ent.nom||"")}</td></tr><tr><th>Marque et modèle</th><td>${esc(mLabel(m))}</td></tr>
+      <tr><th>N° de série / n° de parc</th><td>${esc(m.serie||"—")} / ${esc(m.parc||"—")}</td></tr><tr><th>Heures au compteur</th><td>${esc(v.heures||"—")}</td></tr></table>
+    <h2>Déclaration</h2>
+    <p>Je soussigné(e) <b>${esc(vf.nom||"……………………")}</b>, agissant en qualité de personne qualifiée au sens de l'article R. 4323-24 du Code du travail, atteste avoir réalisé le <b>${fr(v.date)}</b>, à <b>${esc(v.lieu||"……………………")}</b>, la vérification générale périodique de l'engin désigné ci-dessus.</p>
+    <p>Cette vérification a comporté :</p>
+    <p>${box(true)} l'examen de l'état de conservation de l'engin et de ses dispositifs de sécurité ;<br>
+    ${box(true)} les essais de fonctionnement${m.levage?"":" à vide"} ;
+    ${m.levage?`<br>${box(true)} les essais en charge, avec une charge d'essai totale de <b>${isFinite(essaisEval(v).tot)?fmt(essaisEval(v).tot,1):"……"} kg</b>, aux portées et positions indiquées dans le rapport ;<br>
+    ${box(!!v.essais.alarme.tab)} l'essai de déclenchement de l'avertisseur ou du limiteur de surcharge ;<br>
+    ${box(!!v.essais.clapets.descente||!!v.essais.clapets.a)} l'essai de maintien de la charge par les clapets de sécurité.`:""}</p>
+    <p>Le détail des contrôles et des résultats figure dans le rapport de vérification ci-joint.</p>
+    <h2>Conclusion</h2>
+    <p>${box(v.conclusion==="apte")} <b>Apte</b> : aucun défaut de nature à créer un danger n'a été constaté.<br>
+    ${box(v.conclusion==="reserves")} <b>Apte avec réserves</b> : les défauts constatés doivent être corrigés dans les délais indiqués.<br>
+    ${box(v.conclusion==="inapte")} <b>Inapte</b> : l'engin ne doit pas être utilisé avant correction des défauts et nouvelle vérification.</p>
+    ${v.reserves.filter(r=>r.texte).length?resT:""}
+    <p><b>Prochaine VGP à réaliser au plus tard le : ${fr(v.prochaine)}</b></p>
+    <table><tr><th></th><th>Le vérificateur</th><th>Le chef d'établissement ou son représentant</th></tr>
+      <tr><th>Nom et qualité</th><td>${esc(vf.nom||"")}${vf.fonction?", "+esc(vf.fonction):""}</td><td>${esc(v.chefNom||"")}</td></tr>
+      <tr><th>Date</th><td>${fr(v.date)}</td><td></td></tr>
+      <tr><th>Signature</th><td>${sig(v.sigVerif)}</td><td>${sig(v.sigChef)}</td></tr></table>
+    <p class="small">Le chef d'établissement atteste avoir pris connaissance des résultats. La conclusion est reportée dans le registre de sécurité et le rapport est tenu à la disposition de l'inspection du travail.</p>
+  </div>`;
+  document.getElementById("back").onclick=()=>go("machine",{mid:v.machineId});
+  document.getElementById("edit").onclick=()=>go("vgp",{vid:v.id});
+  document.getElementById("expVgp").onclick=()=>{const cm=M(v.machineId)||m;exportPack([cm],[v],"vgp-"+slug(m.parc||mLabel(m))+"-"+v.date+".json");};
+  document.getElementById("print").onclick=()=>{ if(inFrame) toast("Impression indisponible dans l'aperçu : utilisez l'appli installée"); try{window.print();}catch(e){} };
+}
+
+/* ---------- Réglages et sauvegarde ---------- */
+function renderSettings(){
+  document.getElementById("title").textContent="Réglages";
+  const o=S.settings.organisme, vf=S.settings.verif;
+  const used=id=>S.machines.filter(m=>m.clientId===id).length;
+  app.innerHTML=bannerHtml()+`
+  <div class="card"><h2>Votre structure</h2>
+    <p class="hint">Elle apparaît en tête des rapports et des attestations : organisme de contrôle, ou votre entreprise si vous faites vos VGP en interne.</p>
+    <div class="grid3"><label class="f">Nom<input id="o_nom" value="${esc(o.nom)}"></label><label class="f">Adresse<input id="o_adr" value="${esc(o.adresse)}"></label><label class="f">Téléphone<input id="o_tel" value="${esc(o.tel)}"></label></div>
+    <div class="row" style="margin-top:12px">
+      <div style="width:200px;height:80px;border:1px dashed #9a9a94;border-radius:8px;display:grid;place-items:center;background:#fff">${o.logo?`<img src="${o.logo}" alt="logo" style="max-width:190px;max-height:70px">`:`<span class="ref">Pas de logo</span>`}</div>
+      <button class="btn small" id="logoBtn">${o.logo?"Changer le logo":"Ajouter un logo"}</button>
+      ${o.logo?`<button class="btn small danger" id="logoDel">Retirer</button>`:""}
+      <input type="file" id="logoIn" accept="image/*" style="display:none">
+    </div></div>
+  <div class="card"><h2>Vérificateur par défaut</h2>
+    <div class="grid2">
+      <label class="f">Nom et prénom<input id="v_nom" value="${esc(vf.nom)}"></label>
+      <label class="f">Fonction<input id="v_fct" value="${esc(vf.fonction)}"></label>
+      <label class="f">Société / organisme<input id="v_soc" value="${esc(vf.societe)}"></label>
+      <label class="f">Statut<select id="v_st"><option value="interne" ${vf.statut!=="externe"?"selected":""}>Salarié de l'entreprise utilisatrice</option><option value="externe" ${vf.statut==="externe"?"selected":""}>Organisme ou société extérieure</option></select></label>
+      <label class="f" style="grid-column:1/-1">Justificatifs de qualification<input id="v_q" value="${esc(vf.qualif)}"></label>
+    </div></div>
+  <div class="row" style="justify-content:flex-end;margin:-4px 0 14px"><button class="btn primary" id="saveS">Enregistrer la structure et le vérificateur</button></div>
+  <div class="card"><h2>Clients (entreprises utilisatrices)</h2>
+    ${S.clients.length?`<table class="t"><tr><th>Nom</th><th>Adresse</th><th>Contact</th><th style="width:70px">Engins</th><th style="width:60px"></th></tr>
+    ${S.clients.slice().sort((a,b)=>a.nom.localeCompare(b.nom)).map(c=>`<tr><td><input data-cl="${c.id}.nom" value="${esc(c.nom)}"></td><td><input data-cl="${c.id}.adresse" value="${esc(c.adresse)}"></td><td><input data-cl="${c.id}.contact" value="${esc(c.contact)}" placeholder="Nom, téléphone"></td><td>${used(c.id)}</td><td>${used(c.id)?"":`<button class="btn small danger" data-delcl="${c.id}">×</button>`}</td></tr>`).join("")}</table>`:`<p class="hint">Aucun client. Si vous faites les VGP de votre propre parc, créez un seul client : votre entreprise.</p>`}
+    <div class="row" style="margin-top:10px"><input class="search" id="nc_nom" placeholder="Nom du nouveau client"><input class="search" id="nc_adr" placeholder="Adresse"><button class="btn" id="addCl">+ Ajouter</button></div></div>
+  <div class="card"><h2>Sauvegarde et échange de données</h2>
+    <p class="hint">Les données sont enregistrées uniquement sur cette tablette. Exportez régulièrement une sauvegarde complète et gardez-la ailleurs (clé USB, e-mail, cloud). Pour échanger avec un client ou un vérificateur, exportez seulement son parc (filtre client sur l'écran Parc) ou une seule VGP (depuis son rapport) : l'autre personne l'importe ici.</p>
+    <div class="row"><button class="btn dark" id="exp">Exporter une sauvegarde complète</button><button class="btn" id="imp">Importer un fichier</button><input type="file" id="impIn" accept="application/json,.json" style="display:none"></div>
+    <p class="ref" style="margin-top:10px">${S.clients.length} client(s), ${S.machines.length} engin(s), ${S.vgps.length} VGP enregistrée(s).</p></div>
+  <div class="card"><h2>À propos et conditions d'utilisation</h2><p class="hint">${esc(DISCLAIMER)}</p><p class="hint">Périodicités : 12 mois pour les machines mobiles de terrassement à conducteur porté (arrêté du 5 mars 1993) ; 6 mois si l'engin est équipé pour le levage (arrêté du 1er mars 2004).</p></div>`;
+  const g=id=>document.getElementById(id).value.trim();
+  document.getElementById("saveS").onclick=async()=>{
+    Object.assign(S.settings.organisme,{nom:g("o_nom"),adresse:g("o_adr"),tel:g("o_tel")});
+    S.settings.verif={nom:g("v_nom"),fonction:g("v_fct"),societe:g("v_soc"),statut:g("v_st"),qualif:g("v_q")};
+    await DB.put("kv","settings",S.settings); toast("Réglages enregistrés");
+  };
+  document.getElementById("logoBtn").onclick=()=>document.getElementById("logoIn").click();
+  document.getElementById("logoIn").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;
+    try{S.settings.organisme.logo=await readImage(f,500,"image/png");}catch(err){toast("Image illisible");return;}
+    Object.assign(S.settings.organisme,{nom:g("o_nom"),adresse:g("o_adr"),tel:g("o_tel")});
+    await DB.put("kv","settings",S.settings);toast("Logo enregistré");renderSettings();};
+  const ld=document.getElementById("logoDel"); if(ld) ld.onclick=async()=>{S.settings.organisme.logo="";await DB.put("kv","settings",S.settings);renderSettings();};
+  app.oninput=e=>{const t=e.target;if(t.dataset.cl){const [id,f]=t.dataset.cl.split(".");const c=CL(id);if(c){c[f]=t.value;clearTimeout(saveTimers.cl);saveTimers.cl=setTimeout(saveClients,400);}}};
+  app.onclick=async e=>{const b=e.target.closest("[data-delcl]");if(!b)return;const c=CL(b.dataset.delcl);
+    if(!await confirmBox(`Supprimer le client « ${c.nom} » ?`,"Supprimer"))return;S.clients=S.clients.filter(x=>x.id!==c.id);await saveClients();renderSettings();};
+  document.getElementById("addCl").onclick=async()=>{const nom=g("nc_nom");if(!nom){toast("Indiquez le nom du client");return;}
+    S.clients.push({id:uid(),nom,adresse:g("nc_adr"),contact:""});await saveClients();toast("Client ajouté");renderSettings();};
+  document.getElementById("exp").onclick=()=>downloadJson({app:"vgp-engins",version:2,exportedAt:new Date().toISOString(),settings:S.settings,clients:S.clients,machines:S.machines,vgps:S.vgps},"sauvegarde-vgp-"+today()+".json");
+  document.getElementById("imp").onclick=()=>document.getElementById("impIn").click();
+  document.getElementById("impIn").onchange=async e=>{
+    const f=e.target.files[0]; e.target.value=""; if(!f) return;
+    let d; try{d=JSON.parse(await f.text());}catch(err){toast("Fichier illisible");return;}
+    if(d.app!=="vgp-engins"||!Array.isArray(d.machines)){toast("Ce fichier n'est pas un fichier VGP Engins");return;}
+    const cl=d.clients||[], vg=d.vgps||[];
+    if(!await confirmBox(`Importer ${cl.length} client(s), ${d.machines.length} engin(s) et ${vg.length} VGP ? Les éléments déjà présents avec le même identifiant seront mis à jour.`,"Importer",false)) return;
+    cl.forEach(c=>upsert(S.clients,c)); await saveClients();
+    for(const m of d.machines){await DB.put("machines",m.id,m);upsert(S.machines,m);}
+    for(const v of vg){await DB.put("vgps",v.id,v);upsert(S.vgps,v);}
+    if(d.settings&&!S.settings.organisme.nom&&!S.machines.length){S.settings=Object.assign(S.settings,d.settings);await DB.put("kv","settings",S.settings);}
+    toast("Import terminé"); renderSettings();
+  };
+}
+
+/* =====================================================================
+   Démarrage
+   ===================================================================== */
+(async function start(){
+  await DB.open();
+  S.machines=await DB.all("machines"); S.vgps=await DB.all("vgps");
+  const st=await DB.get("kv","settings"); if(st){ S.settings=Object.assign(S.settings,st); S.settings.organisme=Object.assign({nom:"",adresse:"",tel:"",logo:""},st.organisme||{}); }
+  S.clients=(await DB.get("kv","clients"))||[];
+  // Reprise des données de la première version : l'entreprise devient un client
+  if(!S.clients.length&&S.settings.entreprise?.nom){
+    const c={id:uid(),nom:S.settings.entreprise.nom,adresse:S.settings.entreprise.adresse||"",contact:""};
+    S.clients.push(c); await saveClients();
+    if(!S.settings.organisme.nom){S.settings.organisme.nom=c.nom;S.settings.organisme.adresse=c.adresse;}
+    await DB.put("kv","settings",S.settings);
+    for(const m of S.machines){ if(!m.clientId){ m.clientId=c.id; await DB.put("machines",m.id,m);} }
+  }
+  try{ if(navigator.storage&&navigator.storage.persist) navigator.storage.persist(); }catch(e){}
+  render();
+  if(!inFrame&&"serviceWorker" in navigator&&location.protocol==="https:"){ navigator.serviceWorker.register("sw.js").catch(()=>{}); }
+})();
+</script>
+</body>
+</html>
